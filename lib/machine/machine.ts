@@ -1,3 +1,4 @@
+import { PutTbdInEmptySectionsCommand } from './emptySectionsContainTbd';
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -30,6 +31,8 @@ export function machine(
         name: "Blank Seed Software Delivery Machine",
         configuration,
     });
+
+    sdm.addCodeTransformCommand(PutTbdInEmptySectionsCommand);
 
     return sdm;
 }

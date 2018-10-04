@@ -1,7 +1,7 @@
 import { CodeTransformRegistration, TransformResult, Project } from "@atomist/sdm";
 
 
-async function putTbdInEmptySections(project: Project): Promise<TransformResult> {
+export async function putTbdInEmptySections(project: Project): Promise<TransformResult> {
     return {
         edited: false,
         target: project,

@@ -23,7 +23,8 @@
   "dependencies": {
     "@atomist/automation-client": "1.0.0-M.5a",
     "@atomist/sdm": "1.0.0-M.5",
-    "@atomist/sdm-core": "1.0.0-M.5"
+    "@atomist/sdm-core": "1.0.0-M.5",
+    "@atomist/sdm-pack-markdown": "0.1.1-master.20181005140617"
   },
   "devDependencies": {
     "@atomist/sdm-local": "1.0.0-M.5",

@@ -14,6 +14,27 @@ describe("putTbdInEmptySections transform", () => {
         assert(result.success);
         assert(!result.edited);
     });
+
+    it("puts TBD in an empty section of a markdown file", async () => {
+        const projectWithMarkdownFile = InMemoryProject.of({
+            path: "something.md",
+            content: markdownWithAnEmptySection(),
+        });
+        const result = await putTbdInEmptySections(projectWithMarkdownFile);
+        assert(result.success);
+        assert(result.edited);
+
+        const newContent = (await projectWithMarkdownFile.getFile("something.md")).getContentSync();
+        assert(newContent.includes(`## but here is no stuff
+
+{!tbd.md!}
+
+`), newContent);
+        // does not contain more than one
+        assert.strictEqual(newContent.match(/tbd.md/g).length, 1);
+    })
+
+    it("Adds TBD to an empty markdown file");
 });
 
 function markdownWithAnEmptySection() {
@@ -23,5 +44,7 @@ Here is some stuff
 ## but here is no stuff
 
 ## and here is more stuff
+
+This section has things in it.
 `;
 }

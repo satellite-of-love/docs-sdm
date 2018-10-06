@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-import { CodeTransformRegistration, TransformResult, Project } from "@atomist/sdm";
-import { doWithAllMatches, FileParser, MatchResult, doWithFiles } from "@atomist/automation-client";
+import {
+    CodeTransformRegistration,
+    Project,
+    TransformResult,
+} from "@atomist/sdm";
+import {
+    doWithAllMatches,
+    doWithFiles,
+    FileParser,
+    MatchResult,
+} from "@atomist/automation-client";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 import { TreeNode } from "@atomist/tree-path";
 

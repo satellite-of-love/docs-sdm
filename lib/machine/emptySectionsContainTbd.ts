@@ -15,22 +15,21 @@
  */
 
 import {
-    CodeTransformRegistration,
-    Project,
-    TransformResult,
-} from "@atomist/sdm";
-import {
     doWithAllMatches,
     doWithFiles,
     FileParser,
     MatchResult,
 } from "@atomist/automation-client";
+import {
+    CodeTransformRegistration,
+    Project,
+    TransformResult,
+} from "@atomist/sdm";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 import { TreeNode } from "@atomist/tree-path";
 
 const EmptySectionTbd = "\n\n{!tbd.md!}";
 const EmptyFileTbd = "{!tbd.md!}\n";
-
 
 export async function putTbdInEmptySections(project: Project): Promise<TransformResult> {
     let edited = false;
@@ -47,17 +46,16 @@ export async function putTbdInEmptySections(project: Project): Promise<Transform
         }
     });
     (project as any).flush(); // apply updates to matches
-    console.log("edited =  " + edited);
     return {
         edited,
         target: project,
-        success: true
-    }
+        success: true,
+    };
 }
 
 export const PutTbdInEmptySectionsCommand: CodeTransformRegistration = {
     name: "PutTbdInEmptySectionsCommand",
     intent: "put tbd in empty sections",
-    transform: putTbdInEmptySections
+    transform: putTbdInEmptySections,
 
-}
+};

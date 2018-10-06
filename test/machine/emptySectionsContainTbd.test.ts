@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as assert from "assert";
 import { InMemoryProject } from "@atomist/sdm";
+import * as assert from "assert";
 import { putTbdInEmptySections } from "../../lib/machine/emptySectionsContainTbd";
 
 // how about a section with subsections? that is not empty right?
@@ -48,7 +48,7 @@ describe("putTbdInEmptySections transform", () => {
 `), newContent);
         // there is one empty section, so there should be one tbd
         assert.strictEqual(newContent.match(/tbd.md/g).length, 1);
-    })
+    });
 
     it("Adds TBD to an empty markdown file", async () => {
         const projectWithEmptyMarkdownFile = InMemoryProject.of({
@@ -64,7 +64,7 @@ describe("putTbdInEmptySections transform", () => {
     });
 });
 
-function markdownWithAnEmptySection() {
+function markdownWithAnEmptySection(): string {
     return `
 Here is some stuff
 

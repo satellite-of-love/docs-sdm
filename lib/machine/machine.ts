@@ -1,4 +1,4 @@
-import { PutTbdInEmptySectionsCommand } from './emptySectionsContainTbd';
+import { PutTbdInEmptySectionsCommand } from "./emptySectionsContainTbd";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -55,4 +55,4 @@ export function machine(
 const IsMkdocsProject: PushTest = {
     name: "IsMkdocsProject",
     mapping: inv => inv.project.hasFile("mkdocs.yml"),
-}
+};

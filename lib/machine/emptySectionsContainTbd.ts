@@ -1,24 +1,28 @@
 import { CodeTransformRegistration, TransformResult, Project } from "@atomist/sdm";
-import { doWithAllMatches, FileParser, MatchResult } from "@atomist/automation-client";
+import { doWithAllMatches, FileParser, MatchResult, doWithFiles } from "@atomist/automation-client";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 import { TreeNode } from "@atomist/tree-path";
 
-const TbdNotice = "\n\n{!tbd.md!}";
+const EmptySectionTbd = "\n\n{!tbd.md!}";
+const EmptyFileTbd = "{!tbd.md!}\n";
+
 
 export async function putTbdInEmptySections(project: Project): Promise<TransformResult> {
-    const parser: FileParser<TreeNode> = new RemarkFileParser();
     let edited = false;
-    await doWithAllMatches(project, parser, "**/*.md", "//heading/text", m => {
-        console.log("This is something. name is " + m.$name);
-        if (m.$parent.$children.length > 1) {
-            // not empty
-            return;
+    await doWithAllMatches(project, RemarkFileParser, "**/*.md", "//heading", m => {
+        if (m.$children.length <= 1) { // the "text" child doesn't count
+            m.append(EmptySectionTbd);
+            edited = true;
         }
-        m.append(TbdNotice);
-        edited = true;
     });
-    console.log("edited = " + edited);
-    (project as any).flush();
+    await doWithAllMatches(project, RemarkFileParser, "**/*.md", "/root", m => {
+        if (m.$children.length === 0) { // only whitespace
+            m.append(EmptyFileTbd);
+            edited = true;
+        }
+    });
+    (project as any).flush(); // apply updates to matches
+    console.log("edited =  " + edited);
     return {
         edited,
         target: project,

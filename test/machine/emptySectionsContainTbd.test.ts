@@ -30,11 +30,22 @@ describe("putTbdInEmptySections transform", () => {
 {!tbd.md!}
 
 `), newContent);
-        // does not contain more than one
+        // there is one empty section, so there should be one tbd
         assert.strictEqual(newContent.match(/tbd.md/g).length, 1);
     })
 
-    it("Adds TBD to an empty markdown file");
+    it("Adds TBD to an empty markdown file", async () => {
+        const projectWithEmptyMarkdownFile = InMemoryProject.of({
+            path: "something.md",
+            content: "",
+        });
+        const result = await putTbdInEmptySections(projectWithEmptyMarkdownFile);
+        assert(result.success);
+        assert(result.edited);
+
+        const newContent = (await projectWithEmptyMarkdownFile.getFile("something.md")).getContentSync();
+        assert.strictEqual(newContent, "{!tbd.md!}\n");
+    });
 });
 
 function markdownWithAnEmptySection() {

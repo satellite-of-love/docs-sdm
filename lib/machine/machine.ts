@@ -36,14 +36,14 @@ export function machine(
 ): SoftwareDeliveryMachine {
 
     const sdm = createSoftwareDeliveryMachine({
-        name: "Blank Seed Software Delivery Machine",
+        name: "Atomist Documentation Software Delivery Machine",
         configuration,
     });
 
     sdm.addCodeTransformCommand(PutTbdInEmptySectionsCommand);
 
-    const AutofixGoal = new Autofix();
-    const mkDocsGoals = goals("mkdocs").plan(AutofixGoal);
+    const autofix = new Autofix();
+    const mkDocsGoals = goals("mkdocs").plan(autofix);
 
     sdm.addGoalContributions(goalContributors(
         whenPushSatisfies(IsMkdocsProject).setGoals(mkDocsGoals),

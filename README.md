@@ -2,8 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@atomist/docs-sdm.svg)](https://www.npmjs.com/package/@atomist/docs-sdm)
 
-The simplest possible [Atomist][atomist] software delivery machine
-(SDM).
+[Atomist][atomist] software delivery machine (SDM) for delivering our documentation.
 
 See the [Atomist documentation][atomist-doc] for more information on
 what SDMs are and what they can do for you using the Atomist API for

@@ -16,16 +16,16 @@ import { PutTbdInEmptySectionsCommand } from './emptySectionsContainTbd';
  */
 
 import {
-    SoftwareDeliveryMachine,
-    SoftwareDeliveryMachineConfiguration,
-    goalContributors,
-    pushTest,
-    PushTest,
-    whenPushSatisfies,
-    goals,
     Autofix,
     DoNotSetAnyGoals,
+    goalContributors,
+    goals,
     onAnyPush,
+    pushTest,
+    PushTest,
+    SoftwareDeliveryMachine,
+    SoftwareDeliveryMachineConfiguration,
+    whenPushSatisfies,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,

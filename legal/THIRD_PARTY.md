@@ -1,6 +1,6 @@
-# docs-sdm
+# @atomist/docs-sdm
 
-This page details all runtime OSS dependencies of `docs-sdm`.
+This page details all runtime OSS dependencies of `@atomist/docs-sdm`.
 
 ## Licenses
 

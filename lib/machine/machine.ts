@@ -18,6 +18,14 @@ import { PutTbdInEmptySectionsCommand } from './emptySectionsContainTbd';
 import {
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
+    goalContributors,
+    pushTest,
+    PushTest,
+    whenPushSatisfies,
+    goals,
+    Autofix,
+    DoNotSetAnyGoals,
+    onAnyPush,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,
@@ -34,5 +42,17 @@ export function machine(
 
     sdm.addCodeTransformCommand(PutTbdInEmptySectionsCommand);
 
+    const AutofixGoal = new Autofix();
+    const mkDocsGoals = goals("mkdocs").plan(AutofixGoal);
+
+    sdm.addGoalContributions(goalContributors(
+        whenPushSatisfies(IsMkdocsProject).setGoals(mkDocsGoals),
+        onAnyPush().setGoals(DoNotSetAnyGoals),
+    ));
     return sdm;
+}
+
+const IsMkdocsProject: PushTest = {
+    name: "IsMkdocsProject",
+    mapping: inv => inv.project.hasFile("mkdocs.yml"),
 }

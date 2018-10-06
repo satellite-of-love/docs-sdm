@@ -9,13 +9,13 @@ const EmptyFileTbd = "{!tbd.md!}\n";
 
 export async function putTbdInEmptySections(project: Project): Promise<TransformResult> {
     let edited = false;
-    await doWithAllMatches(project, RemarkFileParser, "**/*.md", "//heading", m => {
+    await doWithAllMatches(project, RemarkFileParser, "docs/**/*.md", "//heading", m => {
         if (m.$children.length <= 1) { // the "text" child doesn't count
             m.append(EmptySectionTbd);
             edited = true;
         }
     });
-    await doWithAllMatches(project, RemarkFileParser, "**/*.md", "/root", m => {
+    await doWithAllMatches(project, RemarkFileParser, "docs/**/*.md", "/root", m => {
         if (m.$children.length === 0) { // only whitespace
             m.append(EmptyFileTbd);
             edited = true;

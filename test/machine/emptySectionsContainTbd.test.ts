@@ -7,7 +7,7 @@ import { putTbdInEmptySections } from "../../lib/machine/emptySectionsContainTbd
 describe("putTbdInEmptySections transform", () => {
     it("does nothing on a project with no markdown", async () => {
         const projectWithNonMarkdownFile = InMemoryProject.of({
-            path: "something.txt",
+            path: "docs/something.txt",
             content: markdownWithAnEmptySection(),
         });
         const result = await putTbdInEmptySections(projectWithNonMarkdownFile);
@@ -17,14 +17,14 @@ describe("putTbdInEmptySections transform", () => {
 
     it("puts TBD in an empty section of a markdown file", async () => {
         const projectWithMarkdownFile = InMemoryProject.of({
-            path: "something.md",
+            path: "docs/something.md",
             content: markdownWithAnEmptySection(),
         });
         const result = await putTbdInEmptySections(projectWithMarkdownFile);
         assert(result.success);
         assert(result.edited);
 
-        const newContent = (await projectWithMarkdownFile.getFile("something.md")).getContentSync();
+        const newContent = (await projectWithMarkdownFile.getFile("docs/something.md")).getContentSync();
         assert(newContent.includes(`## but here is no stuff
 
 {!tbd.md!}
@@ -36,14 +36,14 @@ describe("putTbdInEmptySections transform", () => {
 
     it("Adds TBD to an empty markdown file", async () => {
         const projectWithEmptyMarkdownFile = InMemoryProject.of({
-            path: "something.md",
+            path: "docs/something.md",
             content: "",
         });
         const result = await putTbdInEmptySections(projectWithEmptyMarkdownFile);
         assert(result.success);
         assert(result.edited);
 
-        const newContent = (await projectWithEmptyMarkdownFile.getFile("something.md")).getContentSync();
+        const newContent = (await projectWithEmptyMarkdownFile.getFile("docs/something.md")).getContentSync();
         assert.strictEqual(newContent, "{!tbd.md!}\n");
     });
 });

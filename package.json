@@ -20,7 +20,7 @@
     "atomist",
     "automation",
     "sdm",
-    "seed"
+    "docs"
   ],
   "main": "./index.js",
   "types": "./index.d.ts",

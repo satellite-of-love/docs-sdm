@@ -16,9 +16,6 @@
 
 import {
     doWithAllMatches,
-    doWithFiles,
-    FileParser,
-    MatchResult,
 } from "@atomist/automation-client";
 import {
     CodeTransformRegistration,
@@ -26,7 +23,6 @@ import {
     TransformResult,
 } from "@atomist/sdm";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
-import { TreeNode } from "@atomist/tree-path";
 
 const EmptySectionTbd = "\n\n{!tbd.md!}";
 const EmptyFileTbd = "{!tbd.md!}\n";

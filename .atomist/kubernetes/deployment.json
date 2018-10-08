@@ -19,21 +19,16 @@
                 }
               },
               {
+                "name": "NODE_ENV",
+                "value": "production"
+              },
+              {
                 "name": "FORCE_COLOR",
                 "value": "1"
               },
               {
                 "name": "ATOMIST_GOAL_LAUNCHER",
                 "value": "kubernetes"
-              },
-              {
-                "name": "GITHUB_TOKEN",
-                "valueFrom": {
-                  "secretKeyRef": {
-                    "name": "atomist",
-                    "key": "token"
-                  }
-                }
               },
               {
                 "name": "ATOMIST_CONFIG",
@@ -75,53 +70,32 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2000m",
-                "memory": "3000Mi"
+                "cpu": "1000m",
+                "memory": "512Mi"
               },
               "requests": {
-                "cpu": "500m",
-                "memory": "1000Mi"
+                "cpu": "100m",
+                "memory": "384Mi"
               }
             },
             "volumeMounts": [
               {
-                "name": "docker-sock",
-                "mountPath": "/var/run/docker.sock"
-              },
-              {
                 "name": "automation",
                 "mountPath": "/opt/atm",
                 "readOnly": true
-              },
-              {
-                "name": "data",
-                "mountPath": "/opt/data"
               }
             ]
           }
         ],
         "volumes": [
           {
-            "name": "docker-sock",
-            "hostPath": {
-              "path": "/var/run/docker.sock"
-            }
-          },
-          {
             "name": "automation",
             "secret": {
               "secretName": "automation"
             }
-          },
-          {
-            "name": "data",
-            "hostPath": {
-              "path": "/mnt/disks/ssd0/data/docs-sdm",
-              "type": "DirectoryOrCreate"
-            }
           }
         ],
-        "terminationGracePeriodSeconds": 180
+        "terminationGracePeriodSeconds": 30
       }
     }
   }

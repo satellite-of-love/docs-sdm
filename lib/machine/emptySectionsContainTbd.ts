@@ -18,10 +18,10 @@ import {
     doWithAllMatches,
 } from "@atomist/automation-client";
 import {
+    AutofixRegistration,
     CodeTransformRegistration,
     Project,
     TransformResult,
-    AutofixRegistration,
 } from "@atomist/sdm";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 
@@ -60,4 +60,4 @@ export const PutTbdInEmptySectionsCommand: CodeTransformRegistration = {
 export const PutTbdInEmptySectionsAutofix: AutofixRegistration = {
     name: "PutTbdInEmptySectionsAutofix",
     transform: putTbdInEmptySections,
-}
+};

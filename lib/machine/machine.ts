@@ -1,4 +1,4 @@
-import { PutTbdInEmptySectionsCommand, PutTbdInEmptySectionsAutofix } from "./emptySectionsContainTbd";
+import { PutTbdInEmptySectionsAutofix, PutTbdInEmptySectionsCommand } from "./emptySectionsContainTbd";
 /*
  * Copyright © 2018 Atomist, Inc.
  *

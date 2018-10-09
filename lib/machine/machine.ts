@@ -1,4 +1,4 @@
-import { PutTbdInEmptySectionsCommand } from "./emptySectionsContainTbd";
+import { PutTbdInEmptySectionsCommand, PutTbdInEmptySectionsAutofix } from "./emptySectionsContainTbd";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -42,7 +42,7 @@ export function machine(
 
     sdm.addCodeTransformCommand(PutTbdInEmptySectionsCommand);
 
-    const autofix = new Autofix();
+    const autofix = new Autofix().with(PutTbdInEmptySectionsAutofix);
     const mkDocsGoals = goals("mkdocs").plan(autofix);
 
     sdm.addGoalContributions(goalContributors(

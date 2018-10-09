@@ -21,6 +21,7 @@ import {
     CodeTransformRegistration,
     Project,
     TransformResult,
+    AutofixRegistration,
 } from "@atomist/sdm";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 
@@ -55,3 +56,8 @@ export const PutTbdInEmptySectionsCommand: CodeTransformRegistration = {
     transform: putTbdInEmptySections,
 
 };
+
+export const PutTbdInEmptySectionsAutofix: AutofixRegistration = {
+    name: "PutTbdInEmptySectionsAutofix",
+    transform: putTbdInEmptySections,
+}

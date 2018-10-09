@@ -38,6 +38,10 @@ RUN git config --global user.email "bot@atomist.com" \
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
+    
+RUN curl -sL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.8.12/bin/linux/amd64/kubectl \
+    && chmod +x /usr/local/bin/kubectl \
+    && kubectl version --client    
 
 COPY package.json package-lock.json ./
 

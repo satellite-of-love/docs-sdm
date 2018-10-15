@@ -13,30 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import {
-    doWithAllMatches,
-} from "@atomist/automation-client";
 import {
     AutofixRegistration,
     CodeTransformRegistration,
-    Project,
     TransformResult,
 } from "@atomist/sdm";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
+import { Project, astUtils } from "@atomist/automation-client";
 
 const EmptySectionTbd = "\n\n{!tbd.md!}";
 const EmptyFileTbd = "{!tbd.md!}\n";
 
 export async function putTbdInEmptySections(project: Project): Promise<TransformResult> {
     let edited = false;
-    await doWithAllMatches(project, RemarkFileParser, "docs/**/*.md", "//heading", m => {
+    await astUtils.doWithAllMatches(project, RemarkFileParser, "docs/**/*.md", "//heading", m => {
         if (m.$children.length <= 1) { // the "text" child doesn't count
             m.append(EmptySectionTbd);
             edited = true;
         }
     });
-    await doWithAllMatches(project, RemarkFileParser, "docs/**/*.md", "/root", m => {
+    await astUtils.doWithAllMatches(project, RemarkFileParser, "docs/**/*.md", "/root", m => {
         if (m.$children.length === 0) { // only whitespace
             m.append(EmptyFileTbd);
             edited = true;

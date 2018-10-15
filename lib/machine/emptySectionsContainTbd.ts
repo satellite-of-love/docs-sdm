@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { astUtils, Project } from "@atomist/automation-client";
 import {
     AutofixRegistration,
     CodeTransformRegistration,
     TransformResult,
 } from "@atomist/sdm";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
-import { Project, astUtils } from "@atomist/automation-client";
 
 const EmptySectionTbd = "\n\n{!tbd.md!}";
 const EmptyFileTbd = "{!tbd.md!}\n";

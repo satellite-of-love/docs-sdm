@@ -1,3 +1,4 @@
+import { TbdFingerprinterRegistration, tbdFingerprintListener } from './tbdFingerprinter';
 import {
     PutTbdInEmptySectionsAutofix,
     PutTbdInEmptySectionsCommand,
@@ -29,6 +30,7 @@ import {
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     whenPushSatisfies,
+    Fingerprint,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,
@@ -46,10 +48,15 @@ export function machine(
     sdm.addCodeTransformCommand(PutTbdInEmptySectionsCommand);
 
     const autofix = new Autofix().with(PutTbdInEmptySectionsAutofix);
-    const mkDocsGoals = goals("mkdocs").plan(autofix);
+
+    const fingerprint = new Fingerprint().with(TbdFingerprinterRegistration)
+        .withListener(tbdFingerprintListener);
+
+    const mkDocsGoals = goals("mkdocs").plan(autofix, fingerprint);
 
     sdm.addGoalContributions(goalContributors(
-        whenPushSatisfies(IsMkdocsProject).setGoals(mkDocsGoals),
+        whenPushSatisfies(IsMkdocsProject)
+            .setGoals(mkDocsGoals),
         onAnyPush().setGoals(DoNotSetAnyGoals),
     ));
     return sdm;

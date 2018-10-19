@@ -1,0 +1,49 @@
+import { FingerprinterRegistration, PushImpactListenerInvocation, FingerprinterResult, FingerprintListenerInvocation } from "@atomist/sdm";
+import { projectUtils } from "@atomist/automation-client";
+
+function sum(arr: number[]): number {
+    return arr.reduce((a, b) => a + b, 0);
+}
+
+export const TbdFingerprintData = {
+    name: "TbdCount",
+    abbreviation: "tbd",
+    version: "1.0",
+};
+
+function countOccurrences(ofRegExp: RegExp, inString: string): number {
+    if (!ofRegExp.global) {
+        throw new Error("You forgot to use a global regexp. Add a g");
+    }
+    return (inString.match(ofRegExp) || []).length;
+}
+
+async function calculateTbdFingerprint(cri: PushImpactListenerInvocation): Promise<FingerprinterResult> {
+    const tbdCountsPerFile = await projectUtils.gatherFromFiles(cri.project,
+        "docs/**/*.md",
+        async (f): Promise<number> => {
+            return countOccurrences(/\{!tbd.md!\}/g, await f.getContent())
+        });
+    const totalTbds = sum(tbdCountsPerFile);
+    return {
+        ...TbdFingerprintData,
+        sha: "" + totalTbds,
+        data: "" + totalTbds,
+    }
+}
+
+export const TbdFingerprinterRegistration: FingerprinterRegistration = {
+    name: "Count of TBDs",
+    action: calculateTbdFingerprint
+}
+
+export async function tbdFingerprintListener(inv: FingerprintListenerInvocation) {
+    const tbdFingerprints = inv.fingerprints.filter(fr => fr.name === TbdFingerprintData.name);
+    if (tbdFingerprints.length === 0) {
+        return;
+    }
+    const last = tbdFingerprints[0];
+
+    const message = `There are still ${last.data} TBDs to populate.`;
+    return inv.addressChannels(message);
+}

@@ -28,7 +28,7 @@
     "@atomist/automation-client": "^1.0.0-RC.1",
     "@atomist/sdm": "^1.0.0-RC.1",
     "@atomist/sdm-core": "^1.0.0-RC.1",
-    "@atomist/sdm-pack-markdown": "0.1.1-master.20181006000056",
+    "@atomist/sdm-pack-markdown": "^0.1.1",
     "@atomist/tree-path": "^1.0.0-M.4"
   },
   "devDependencies": {

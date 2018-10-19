@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { FingerprinterRegistration, PushImpactListenerInvocation, FingerprinterResult, FingerprintListenerInvocation } from "@atomist/sdm";
+import {
+    FingerprinterRegistration,
+    FingerprinterResult,
+    FingerprintListenerInvocation,
+    PushImpactListenerInvocation,
+} from "@atomist/sdm";
 import { projectUtils } from "@atomist/automation-client";
 
 function sum(arr: number[]): number {

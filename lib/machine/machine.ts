@@ -22,6 +22,7 @@ import {
 import {
     Autofix,
     DoNotSetAnyGoals,
+    Fingerprint,
     goalContributors,
     goals,
     onAnyPush,
@@ -30,7 +31,6 @@ import {
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     whenPushSatisfies,
-    Fingerprint,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,

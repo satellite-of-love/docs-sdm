@@ -18,10 +18,6 @@ import {
     Project,
 } from "@atomist/automation-client";
 import {
-    astUtils,
-    Project,
-} from "@atomist/automation-client";
-import {
     AutofixRegistration,
     CodeTransformRegistration,
     TransformResult,

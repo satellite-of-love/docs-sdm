@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+import { projectUtils } from "@atomist/automation-client";
 import {
     FingerprinterRegistration,
     FingerprinterResult,
     FingerprintListenerInvocation,
     PushImpactListenerInvocation,
 } from "@atomist/sdm";
-import { projectUtils } from "@atomist/automation-client";
 
 function sum(arr: number[]): number {
     return arr.reduce((a, b) => a + b, 0);
@@ -43,22 +43,22 @@ async function calculateTbdFingerprint(cri: PushImpactListenerInvocation): Promi
     const tbdCountsPerFile = await projectUtils.gatherFromFiles(cri.project,
         "docs/**/*.md",
         async (f): Promise<number> => {
-            return countOccurrences(/\{!tbd.md!\}/g, await f.getContent())
+            return countOccurrences(/\{!tbd.md!\}/g, await f.getContent());
         });
     const totalTbds = sum(tbdCountsPerFile);
     return {
         ...TbdFingerprintData,
         sha: "" + totalTbds,
         data: "" + totalTbds,
-    }
+    };
 }
 
 export const TbdFingerprinterRegistration: FingerprinterRegistration = {
     name: "Count of TBDs",
-    action: calculateTbdFingerprint
-}
+    action: calculateTbdFingerprint,
+};
 
-export async function tbdFingerprintListener(inv: FingerprintListenerInvocation) {
+export async function tbdFingerprintListener(inv: FingerprintListenerInvocation): Promise<void> {
     const tbdFingerprints = inv.fingerprints.filter(fr => fr.name === TbdFingerprintData.name);
     if (tbdFingerprints.length === 0) {
         return;

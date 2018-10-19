@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { PushImpactListenerInvocation } from '@atomist/sdm';
-import { TbdFingerprinterRegistration } from './../../lib/machine/tbdFingerprinter';
-import { InMemoryProject, FingerprintData, Project } from '@atomist/automation-client';
+import { FingerprintData, InMemoryProject, Project } from "@atomist/automation-client";
+import { PushImpactListenerInvocation } from "@atomist/sdm";
 import * as assert from "assert";
+import { TbdFingerprinterRegistration } from "./../../lib/machine/tbdFingerprinter";
 
 describe("Fingerprinting a project for TBD count", () => {
 
@@ -41,8 +41,8 @@ describe("Fingerprinting a project for TBD count", () => {
         const fingerprint2 = await invoke(projectWithTwo);
         const fingerprint3 = await invoke(projectWithThree);
 
-        assert.deepEqual(fingerprint2.data, "2");
-        assert.deepEqual(fingerprint3.data, "3");
+        assert.strictEqual(fingerprint2.data, "2");
+        assert.strictEqual(fingerprint3.data, "3");
 
         assert(fingerprint2.sha !== fingerprint3.sha);
     });
@@ -56,6 +56,6 @@ describe("Fingerprinting a project for TBD count", () => {
 
         const fingerprint0 = await invoke(projectWithZero);
 
-        assert.deepEqual(fingerprint0.data, "0");
+        assert.strictEqual(fingerprint0.data, "0");
     });
 });

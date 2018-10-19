@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 LABEL maintainer="Atomist <docker@atomist.com>"
 
 RUN apt-get update && apt-get install -y \
-        curl \
+    curl s3cmd \
     && rm -rf /var/lib/apt/lists/*
 
 ENV DUMB_INIT_VERSION=1.2.2
@@ -28,8 +28,8 @@ ENTRYPOINT ["dumb-init", "node", "--trace-warnings", "--expose_gc", "--optimize_
 CMD ["node_modules/.bin/atm-start"]
 
 RUN apt-get update && apt-get install -y \
-        build-essential \
-        git \
+    build-essential \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 RUN git config --global user.email "bot@atomist.com" \
@@ -38,7 +38,7 @@ RUN git config --global user.email "bot@atomist.com" \
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
-    
+
 RUN curl -sL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.8.12/bin/linux/amd64/kubectl \
     && chmod +x /usr/local/bin/kubectl \
     && kubectl version --client    

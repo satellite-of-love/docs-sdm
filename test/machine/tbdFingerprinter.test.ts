@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { FingerprintData, InMemoryProject, Project } from "@atomist/automation-client";
+import {
+    FingerprintData,
+    InMemoryProject,
+    Project,
+} from "@atomist/automation-client";
 import { PushImpactListenerInvocation } from "@atomist/sdm";
 import * as assert from "assert";
 import { TbdFingerprinterRegistration } from "./../../lib/machine/tbdFingerprinter";

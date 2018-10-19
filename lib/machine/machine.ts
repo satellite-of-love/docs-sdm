@@ -2,7 +2,10 @@ import {
     PutTbdInEmptySectionsAutofix,
     PutTbdInEmptySectionsCommand,
 } from "./emptySectionsContainTbd";
-import { TbdFingerprinterRegistration, tbdFingerprintListener } from "./tbdFingerprinter";
+import {
+    TbdFingerprinterRegistration,
+    tbdFingerprintListener,
+} from "./tbdFingerprinter";
 /*
  * Copyright © 2018 Atomist, Inc.
  *

@@ -13,3 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { Configuration } from "@atomist/automation-client";
+import {
+    ConfigureOptions,
+    configureSdm,
+} from "@atomist/sdm-core";
+import { machine } from "./lib/machine/machine";
+
+const machineOptions: ConfigureOptions = {
+    requiredConfigurationValues: [
+    ],
+};
+
+export const configuration: Configuration = {
+    workspaceIds: ["connect this SDM to your whole team with the Atomist service"],
+    postProcessors: [
+        configureSdm(machine, machineOptions),
+    ],
+};

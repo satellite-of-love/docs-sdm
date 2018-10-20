@@ -47,4 +47,10 @@ COPY package.json package-lock.json ./
 
 RUN npm ci
 
+## specific to THIS sdm
+
+RUN apt-get install python3.6
+RUN curl -O https://bootstrap.pypa.io/get-pip.py
+RUN python3.6 get-pip.py
+
 COPY . .

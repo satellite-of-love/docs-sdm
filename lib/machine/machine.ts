@@ -34,10 +34,13 @@ import {
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     whenPushSatisfies,
+    lastLinesLogInterpreter,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,
 } from "@atomist/sdm-core";
+import { Build, spawnBuilder } from "@atomist/sdm-pack-build";
+import { RemoteRepoRef, asSpawnCommand } from "@atomist/automation-client";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,
@@ -55,7 +58,26 @@ export function machine(
     const fingerprint = new Fingerprint().with(TbdFingerprinterRegistration)
         .withListener(tbdFingerprintListener);
 
-    const mkDocsGoals = goals("mkdocs").plan(autofix, fingerprint);
+    const build = new Build().with({
+        name: "mkdocs build",
+        builder: spawnBuilder({
+            name: "mkdocs spawn builder",
+            logInterpreter: lastLinesLogInterpreter("Here is some log bits:", 10),
+            projectToAppInfo: async (p) => {
+                return {
+                    name: p.id.repo,
+                    version: p.id.sha,
+                    id: p.id as RemoteRepoRef
+                }
+            },
+            commands: [
+                "pip install -r requirements.txt",
+                "mkdocs build"
+            ].map(m => asSpawnCommand(m)),
+        })
+    });
+
+    const mkDocsGoals = goals("mkdocs").plan(autofix, fingerprint).plan(build).after(autofix);
 
     sdm.addGoalContributions(goalContributors(
         whenPushSatisfies(IsMkdocsProject)

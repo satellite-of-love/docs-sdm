@@ -22,25 +22,25 @@ import {
  * limitations under the License.
  */
 
+import { asSpawnCommand, RemoteRepoRef } from "@atomist/automation-client";
 import {
     Autofix,
     DoNotSetAnyGoals,
     Fingerprint,
     goalContributors,
     goals,
+    lastLinesLogInterpreter,
     onAnyPush,
-    pushTest,
     PushTest,
+    pushTest,
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     whenPushSatisfies,
-    lastLinesLogInterpreter,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,
 } from "@atomist/sdm-core";
 import { Build, spawnBuilder } from "@atomist/sdm-pack-build";
-import { RemoteRepoRef, asSpawnCommand } from "@atomist/automation-client";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,
@@ -63,18 +63,18 @@ export function machine(
         builder: spawnBuilder({
             name: "mkdocs spawn builder",
             logInterpreter: lastLinesLogInterpreter("Here is some log bits:", 10),
-            projectToAppInfo: async (p) => {
+            projectToAppInfo: async p => {
                 return {
                     name: p.id.repo,
                     version: p.id.sha,
-                    id: p.id as RemoteRepoRef
-                }
+                    id: p.id as RemoteRepoRef,
+                };
             },
             commands: [
                 "pip install -r requirements.txt",
-                "mkdocs build"
+                "mkdocs build",
             ].map(m => asSpawnCommand(m)),
-        })
+        }),
     });
 
     const mkDocsGoals = goals("mkdocs").plan(autofix, fingerprint).plan(build).after(autofix);

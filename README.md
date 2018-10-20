@@ -75,6 +75,18 @@ documentation.
 $ npm run build
 ```
 
+### Run locally in Docker
+
+```
+docker build -t docs-sdm .
+```
+
+To run in team mode, I need an API key accessible from the docker container. I populated #HOME/.atomist by running `atomist config` once.
+
+```
+docker run --rm --mount source=$HOME/.atomist,target=/root/.atomist,type=bind docs-sdm
+```
+
 ### Release
 
 Releases are handled via the [Atomist SDM][atomist-sdm].  Just press

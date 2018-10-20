@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { asSpawnCommand, RemoteRepoRef } from "@atomist/automation-client";
+import {
+    asSpawnCommand,
+    RemoteRepoRef,
+} from "@atomist/automation-client";
 import { lastLinesLogInterpreter } from "@atomist/sdm";
 import { spawnBuilder } from "@atomist/sdm-pack-build";
 

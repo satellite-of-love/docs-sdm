@@ -22,7 +22,10 @@ import {
  * limitations under the License.
  */
 
-import { asSpawnCommand, RemoteRepoRef } from "@atomist/automation-client";
+import {
+    asSpawnCommand,
+    RemoteRepoRef,
+} from "@atomist/automation-client";
 import {
     Autofix,
     DoNotSetAnyGoals,
@@ -31,8 +34,8 @@ import {
     goals,
     lastLinesLogInterpreter,
     onAnyPush,
-    PushTest,
     pushTest,
+    PushTest,
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     whenPushSatisfies,
@@ -40,7 +43,10 @@ import {
 import {
     createSoftwareDeliveryMachine,
 } from "@atomist/sdm-core";
-import { Build, spawnBuilder } from "@atomist/sdm-pack-build";
+import {
+    Build,
+    spawnBuilder,
+} from "@atomist/sdm-pack-build";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,

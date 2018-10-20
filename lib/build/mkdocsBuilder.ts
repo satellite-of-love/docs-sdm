@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { spawnBuilder } from "@atomist/sdm-pack-build";
+import { asSpawnCommand, RemoteRepoRef } from "@atomist/automation-client";
 import { lastLinesLogInterpreter } from "@atomist/sdm";
-import { RemoteRepoRef, asSpawnCommand } from "@atomist/automation-client";
+import { spawnBuilder } from "@atomist/sdm-pack-build";
 
 export const mkdocsBuilder = {
     name: "mkdocs build",
@@ -35,4 +35,4 @@ export const mkdocsBuilder = {
             "mkdocs build",
         ].map(m => asSpawnCommand(m)),
     }),
-}
+};

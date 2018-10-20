@@ -47,4 +47,14 @@ COPY package.json package-lock.json ./
 
 RUN npm ci
 
+## specific to THIS sdm
+
+RUN apt-get install python3.6
+RUN curl -O https://bootstrap.pypa.io/get-pip.py
+RUN python3.6 get-pip.py
+
+# https://click.palletsprojects.com/en/7.x/python3/
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
+
 COPY . .

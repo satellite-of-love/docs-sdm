@@ -19,23 +19,29 @@ import {
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import { lastLinesLogInterpreter } from "@atomist/sdm";
-import { spawnBuilder } from "@atomist/sdm-pack-build";
+import { spawnBuilder, BuilderRegistration } from "@atomist/sdm-pack-build";
 
-export const mkdocsBuilder = {
+const commandsToRun = [
+    "pip install -r requirements.txt",
+    "mkdocs build",
+]
+
+const logInterpreter = lastLinesLogInterpreter("Tail of build log:", 10);
+
+const mkdocsBuilder = spawnBuilder({
+    name: "mkdocs spawn builder",
+    logInterpreter,
+    projectToAppInfo: async p => {
+        return {
+            name: p.id.repo,
+            version: p.id.sha,
+            id: p.id as RemoteRepoRef,
+        };
+    },
+    commands: commandsToRun.map(m => asSpawnCommand(m)),
+})
+
+export const mkdocsBuilderRegistration: BuilderRegistration = {
     name: "mkdocs build",
-    builder: spawnBuilder({
-        name: "mkdocs spawn builder",
-        logInterpreter: lastLinesLogInterpreter("Here is some log bits:", 10),
-        projectToAppInfo: async p => {
-            return {
-                name: p.id.repo,
-                version: p.id.sha,
-                id: p.id as RemoteRepoRef,
-            };
-        },
-        commands: [
-            "pip install -r requirements.txt",
-            "mkdocs build",
-        ].map(m => asSpawnCommand(m)),
-    }),
+    builder: mkdocsBuilder,
 };

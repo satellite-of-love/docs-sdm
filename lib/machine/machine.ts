@@ -1,11 +1,3 @@
-import {
-    PutTbdInEmptySectionsAutofix,
-    PutTbdInEmptySectionsCommand,
-} from "./emptySectionsContainTbd";
-import {
-    TbdFingerprinterRegistration,
-    tbdFingerprintListener,
-} from "./tbdFingerprinter";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -21,7 +13,6 @@ import {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
     Autofix,
     DoNotSetAnyGoals,
@@ -29,7 +20,6 @@ import {
     goalContributors,
     goals,
     onAnyPush,
-    pushTest,
     PushTest,
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
@@ -38,6 +28,18 @@ import {
 import {
     createSoftwareDeliveryMachine,
 } from "@atomist/sdm-core";
+import {
+    Build,
+} from "@atomist/sdm-pack-build";
+import { mkdocsBuilderRegistration } from "./../build/mkdocsBuilder";
+import {
+    PutTbdInEmptySectionsAutofix,
+    PutTbdInEmptySectionsCommand,
+} from "./emptySectionsContainTbd";
+import {
+    TbdFingerprinterRegistration,
+    tbdFingerprintListener,
+} from "./tbdFingerprinter";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,
@@ -55,7 +57,9 @@ export function machine(
     const fingerprint = new Fingerprint().with(TbdFingerprinterRegistration)
         .withListener(tbdFingerprintListener);
 
-    const mkDocsGoals = goals("mkdocs").plan(autofix, fingerprint);
+    const build = new Build().with(mkdocsBuilderRegistration);
+
+    const mkDocsGoals = goals("mkdocs").plan(autofix, fingerprint).plan(build).after(autofix);
 
     sdm.addGoalContributions(goalContributors(
         whenPushSatisfies(IsMkdocsProject)

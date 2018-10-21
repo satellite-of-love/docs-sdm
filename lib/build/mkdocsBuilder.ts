@@ -19,7 +19,10 @@ import {
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import { lastLinesLogInterpreter } from "@atomist/sdm";
-import { BuilderRegistration, spawnBuilder } from "@atomist/sdm-pack-build";
+import {
+    BuilderRegistration,
+    spawnBuilder,
+} from "@atomist/sdm-pack-build";
 
 const commandsToRun = [
     "pip install -r requirements.txt",

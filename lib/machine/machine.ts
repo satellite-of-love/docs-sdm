@@ -1,11 +1,3 @@
-import {
-    PutTbdInEmptySectionsAutofix,
-    PutTbdInEmptySectionsCommand,
-} from "./emptySectionsContainTbd";
-import {
-    TbdFingerprinterRegistration,
-    tbdFingerprintListener,
-} from "./tbdFingerprinter";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -21,20 +13,13 @@ import {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import {
-    asSpawnCommand,
-    RemoteRepoRef,
-} from "@atomist/automation-client";
 import {
     Autofix,
     DoNotSetAnyGoals,
     Fingerprint,
     goalContributors,
     goals,
-    lastLinesLogInterpreter,
     onAnyPush,
-    pushTest,
     PushTest,
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
@@ -45,9 +30,16 @@ import {
 } from "@atomist/sdm-core";
 import {
     Build,
-    spawnBuilder,
 } from "@atomist/sdm-pack-build";
-import { mkdocsBuilder } from "../build/mkdocsBuilder";
+import { mkdocsBuilderRegistration } from "./../build/mkdocsBuilder";
+import {
+    PutTbdInEmptySectionsAutofix,
+    PutTbdInEmptySectionsCommand,
+} from "./emptySectionsContainTbd";
+import {
+    TbdFingerprinterRegistration,
+    tbdFingerprintListener,
+} from "./tbdFingerprinter";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,
@@ -65,7 +57,7 @@ export function machine(
     const fingerprint = new Fingerprint().with(TbdFingerprinterRegistration)
         .withListener(tbdFingerprintListener);
 
-    const build = new Build().with(mkdocsBuilder);
+    const build = new Build().with(mkdocsBuilderRegistration);
 
     const mkDocsGoals = goals("mkdocs").plan(autofix, fingerprint).plan(build).after(autofix);
 

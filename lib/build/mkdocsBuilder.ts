@@ -27,7 +27,7 @@ import {
 
 const commands = [
     "pip install -r requirements.txt",
-    "mkdocs build",
+    "mkdocs build --strict",
 ].map(m => asSpawnCommand(m));
 
 const logInterpreter = lastLinesLogInterpreter("Tail of build log:", 10);

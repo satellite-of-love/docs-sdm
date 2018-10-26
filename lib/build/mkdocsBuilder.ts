@@ -19,7 +19,7 @@ import {
     Project,
     RemoteRepoRef,
 } from "@atomist/automation-client";
-import { Builder, lastLinesLogInterpreter } from "@atomist/sdm";
+import { lastLinesLogInterpreter } from "@atomist/sdm";
 import {
     BuilderRegistration,
     spawnBuilder,

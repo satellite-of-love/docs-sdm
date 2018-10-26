@@ -1,3 +1,4 @@
+import { AlphabetizeGlossaryCommand, AlphabetizeGlossaryAutofix } from './alphabetizeGlossary';
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -51,8 +52,10 @@ export function machine(
     });
 
     sdm.addCodeTransformCommand(PutTbdInEmptySectionsCommand);
+    sdm.addCodeTransformCommand(AlphabetizeGlossaryCommand);
 
-    const autofix = new Autofix().with(PutTbdInEmptySectionsAutofix);
+    const autofix = new Autofix().with(PutTbdInEmptySectionsAutofix)
+        .with(AlphabetizeGlossaryAutofix);
 
     const fingerprint = new Fingerprint().with(TbdFingerprinterRegistration)
         .withListener(tbdFingerprintListener);

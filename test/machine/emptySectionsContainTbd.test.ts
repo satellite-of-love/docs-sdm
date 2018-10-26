@@ -18,8 +18,6 @@ import { InMemoryProject } from "@atomist/automation-client";
 import * as assert from "assert";
 import { putTbdInEmptySections } from "../../lib/machine/emptySectionsContainTbd";
 
-// how about a section with subsections? that is not empty right?
-
 describe("putTbdInEmptySections transform", () => {
     it("does nothing on a project with no markdown", async () => {
         const projectWithNonMarkdownFile = InMemoryProject.of({

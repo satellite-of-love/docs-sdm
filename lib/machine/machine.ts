@@ -40,7 +40,10 @@ import {
     TbdFingerprinterRegistration,
     tbdFingerprintListener,
 } from "./tbdFingerprinter";
-import { AlphabetizeGlossaryCommand, AlphabetizeGlossaryAutofix } from "./alphabetizeGlossary";
+import {
+    AlphabetizeGlossaryAutofix,
+    AlphabetizeGlossaryCommand,
+} from "./alphabetizeGlossary";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,

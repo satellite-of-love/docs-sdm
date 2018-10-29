@@ -15,8 +15,8 @@
  */
 import {
     astUtils,
-    Project,
     logger,
+    Project,
 } from "@atomist/automation-client";
 import {
     AutofixRegistration,

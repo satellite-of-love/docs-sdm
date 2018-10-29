@@ -28,7 +28,7 @@ import * as _ from "lodash";
 
 /**
  * glossary.md contains a list of words, each one the text of a heading.
- * 
+ *
  * We assume there is nothing else in this file. We're gonna grab each top-level heading along with its contents,
  * alphabetize by the heading text, and overwrite the file with that.
  */
@@ -36,13 +36,17 @@ export async function alphabetizeGlossary(project: Project): Promise<TransformRe
     let edited = false;
     const file = await project.getFile("docs/developer/glossary.md");
     if (file) {
-        const definitions = await astUtils.gatherFromMatches(project, RemarkFileParser, "docs/developer/glossary.md", "//heading", m => {
-            const headingText = (m as any).text as string;
-            return {
-                word: headingText,
-                wordAndDefinition: m.$value,
-            }
-        });
+        const definitions = await astUtils.gatherFromMatches(project,
+            RemarkFileParser,
+            "docs/developer/glossary.md",
+            "//heading",
+            m => {
+                const headingText = (m as any).text as string;
+                return {
+                    word: headingText,
+                    wordAndDefinition: m.$value,
+                };
+            });
 
         const alphabetized = _.sortBy(definitions, d => d.word);
         const newContent = alphabetized.map(d => d.wordAndDefinition).join("\n\n") + "\n";

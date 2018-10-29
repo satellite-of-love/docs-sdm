@@ -33,6 +33,10 @@ import {
 } from "@atomist/sdm-pack-build";
 import { mkdocsBuilderRegistration } from "./../build/mkdocsBuilder";
 import {
+    AlphabetizeGlossaryAutofix,
+    AlphabetizeGlossaryCommand,
+} from "./alphabetizeGlossary";
+import {
     PutTbdInEmptySectionsAutofix,
     PutTbdInEmptySectionsCommand,
 } from "./emptySectionsContainTbd";
@@ -40,10 +44,6 @@ import {
     TbdFingerprinterRegistration,
     tbdFingerprintListener,
 } from "./tbdFingerprinter";
-import {
-    AlphabetizeGlossaryAutofix,
-    AlphabetizeGlossaryCommand,
-} from "./alphabetizeGlossary";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,

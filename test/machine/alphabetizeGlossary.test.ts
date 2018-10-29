@@ -41,7 +41,7 @@ describe("alphabetizeGlossary transform", () => {
 
 });
 
-function outOfOrderGlossary() {
+function outOfOrderGlossary(): string {
     return `#### stuff
 Stuff is great.
 
@@ -53,7 +53,7 @@ This starts with A
 `;
 }
 
-function orderedGlossary() {
+function orderedGlossary(): string {
     return `#### armadillos
 This starts with A
 

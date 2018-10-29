@@ -26,6 +26,7 @@ const machineOptions: ConfigureOptions = {
     ],
 };
 
+// Main configuration entry point for this SDM
 export const configuration: Configuration = {
     postProcessors: [
         configureSdm(machine, machineOptions),

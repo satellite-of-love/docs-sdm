@@ -19,7 +19,9 @@ import {
     Project,
     RemoteRepoRef,
 } from "@atomist/automation-client";
-import { lastLinesLogInterpreter } from "@atomist/sdm";
+import {
+    lastLinesLogInterpreter,
+} from "@atomist/sdm";
 import {
     BuilderRegistration,
     spawnBuilder,
@@ -27,7 +29,7 @@ import {
 
 const commands = [
     "pip install -r requirements.txt",
-    "mkdocs build --strict",
+    "mkdocs build",
 ].map(m => asSpawnCommand(m));
 
 const logInterpreter = lastLinesLogInterpreter("Tail of build log:", 10);

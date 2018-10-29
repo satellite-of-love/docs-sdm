@@ -1,4 +1,3 @@
-import { AlphabetizeGlossaryCommand, AlphabetizeGlossaryAutofix } from './alphabetizeGlossary';
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -41,6 +40,7 @@ import {
     TbdFingerprinterRegistration,
     tbdFingerprintListener,
 } from "./tbdFingerprinter";
+import { AlphabetizeGlossaryCommand, AlphabetizeGlossaryAutofix } from "./alphabetizeGlossary";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,

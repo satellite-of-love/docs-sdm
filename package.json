@@ -1,6 +1,6 @@
 {
   "name": "@atomist/docs-sdm",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "an Atomist SDM to deliver documentation projects",
   "author": {
     "name": "Atomist",

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { PushListenerInvocation, pushTest } from "@atomist/sdm";
+import {
+    PushListenerInvocation,
+    pushTest,
+} from "@atomist/sdm";
 
 export const IsMkdocsProject = pushTest(
     "IsMkdocsProject",

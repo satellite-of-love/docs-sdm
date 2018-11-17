@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { pushTest, PushListenerInvocation } from "@atomist/sdm";
+import { PushListenerInvocation, pushTest } from "@atomist/sdm";
 
 export const IsMkdocsProject = pushTest(
     "IsMkdocsProject",
     (pli: PushListenerInvocation): Promise<boolean> => {
         return pli.project.hasFile("mkdocs.yml");
-    })
+    });

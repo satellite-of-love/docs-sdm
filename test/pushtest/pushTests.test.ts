@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { IsMkdocsProject } from './../../lib/pushtest/pushTests';
-import * as assert from "assert";
 import { InMemoryProject } from "@atomist/automation-client";
-import { PushListenerInvocation } from '@atomist/sdm';
+import { PushListenerInvocation } from "@atomist/sdm";
+import * as assert from "assert";
+import { IsMkdocsProject } from "./../../lib/pushtest/pushTests";
 
 describe("push tests for mkdocs projects", () => {
     it("identifies a mkdocs project", async () => {
         const MkdocsProject = InMemoryProject.of({
             path: "mkdocs.yml",
-            content: `site_name: Pretend Site`
+            content: `site_name: Pretend Site`,
         });
         const result = await IsMkdocsProject.mapping({ project: MkdocsProject } as any as PushListenerInvocation);
         assert(result);

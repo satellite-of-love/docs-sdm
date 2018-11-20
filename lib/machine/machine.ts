@@ -15,11 +15,8 @@
  */
 import {
     Autofix,
-    DoNotSetAnyGoals,
     Fingerprint,
-    goalContributors,
     goals,
-    onAnyPush,
     PushTest,
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
@@ -67,11 +64,10 @@ export function machine(
 
     const mkDocsGoals = goals("mkdocs").plan(autofix, fingerprint).plan(build).after(autofix);
 
-    sdm.addGoalContributions(goalContributors(
+    sdm.withPushRules(
         whenPushSatisfies(IsMkdocsProject)
             .setGoals(mkDocsGoals),
-        onAnyPush().setGoals(DoNotSetAnyGoals),
-    ));
+    );
     return sdm;
 }
 

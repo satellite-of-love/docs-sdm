@@ -41,6 +41,7 @@ import {
     TbdFingerprinterRegistration,
     tbdFingerprintListener,
 } from "./tbdFingerprinter";
+import { MkdocsSiteGenerator } from "./mkdocsGenerator";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,
@@ -68,6 +69,9 @@ export function machine(
         whenPushSatisfies(IsMkdocsProject)
             .setGoals(mkDocsGoals),
     );
+
+    sdm.addGeneratorCommand(MkdocsSiteGenerator);
+
     return sdm;
 }
 

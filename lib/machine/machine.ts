@@ -37,11 +37,11 @@ import {
     PutTbdInEmptySectionsAutofix,
     PutTbdInEmptySectionsCommand,
 } from "./emptySectionsContainTbd";
+import { MkdocsSiteGenerator } from "./mkdocsGenerator";
 import {
     TbdFingerprinterRegistration,
     tbdFingerprintListener,
 } from "./tbdFingerprinter";
-import { MkdocsSiteGenerator } from "./mkdocsGenerator";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,

@@ -15,9 +15,9 @@
  */
 
 import {
-    asSpawnCommand,
     Project,
     RemoteRepoRef,
+    SpawnCommand,
 } from "@atomist/automation-client";
 import {
     lastLinesLogInterpreter,
@@ -27,10 +27,10 @@ import {
     spawnBuilder,
 } from "@atomist/sdm-pack-build";
 
-const commands = [
-    "pip install -r requirements.txt",
-    "mkdocs build",
-].map(m => asSpawnCommand(m));
+const commands: SpawnCommand[] = [
+    { command: "pip", args: ["install", "-r", "requirements.txt"] },
+    { command: "mkdocs", args: ["build"] },
+];
 
 const logInterpreter = lastLinesLogInterpreter("Tail of build log:", 10);
 

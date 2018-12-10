@@ -61,9 +61,14 @@ export function machine(
     const fingerprint = new Fingerprint().with(TbdFingerprinterRegistration)
         .withListener(tbdFingerprintListener);
 
-    const build = new Build().with(mkdocsBuilderRegistration);
+    const build = new Build().with(mkdocsBuilderRegistration());
 
-    const mkDocsGoals = goals("mkdocs").plan(autofix, fingerprint).plan(build).after(autofix);
+    const strictBuild = new Build().with(mkdocsBuilderRegistration({ strict: true }))
+
+    const mkDocsGoals = goals("mkdocs")
+        .plan(autofix, fingerprint)
+        .plan(build, strictBuild)
+        .after(autofix);
 
     sdm.withPushRules(
         whenPushSatisfies(IsMkdocsProject)

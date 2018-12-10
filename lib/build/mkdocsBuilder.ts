@@ -36,17 +36,23 @@ const projectToAppInfo = async (p: Project) => {
     };
 };
 
-const mkdocsBuilder = spawnBuilder({
-    name: "mkdocs spawn builder",
-    logInterpreter,
-    projectToAppInfo,
-    commands: [
-        { command: "pip", args: ["install", "-r", "requirements.txt"] },
-        { command: "mkdocs", args: ["build"] },
-    ],
-});
-
-export const mkdocsBuilderRegistration: BuilderRegistration = {
-    name: "mkdocs build",
-    builder: mkdocsBuilder,
+function mkdocsBuilder(options: { strict: boolean }) {
+    const mkdocsStrictArg = options.strict ? ["--strict"] : []
+    return spawnBuilder({
+        name: "mkdocs spawn builder",
+        logInterpreter,
+        projectToAppInfo,
+        commands: [
+            { command: "pip", args: ["install", "-r", "requirements.txt"] },
+            { command: "mkdocs", args: ["build"].concat(mkdocsStrictArg) },
+        ],
+    });
 };
+
+export function mkdocsBuilderRegistration(
+    options: { strict: boolean } = { strict: false }): BuilderRegistration {
+    return {
+        name: "mkdocs build",
+        builder: mkdocsBuilder(options),
+    };
+}

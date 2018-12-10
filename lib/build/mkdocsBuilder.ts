@@ -17,7 +17,6 @@
 import {
     Project,
     RemoteRepoRef,
-    SpawnCommand,
 } from "@atomist/automation-client";
 import {
     lastLinesLogInterpreter,
@@ -26,11 +25,6 @@ import {
     BuilderRegistration,
     spawnBuilder,
 } from "@atomist/sdm-pack-build";
-
-const commands: SpawnCommand[] = [
-    { command: "pip", args: ["install", "-r", "requirements.txt"] },
-    { command: "mkdocs", args: ["build"] },
-];
 
 const logInterpreter = lastLinesLogInterpreter("Tail of build log:", 10);
 
@@ -46,7 +40,10 @@ const mkdocsBuilder = spawnBuilder({
     name: "mkdocs spawn builder",
     logInterpreter,
     projectToAppInfo,
-    commands,
+    commands: [
+        { command: "pip", args: ["install", "-r", "requirements.txt"] },
+        { command: "mkdocs", args: ["build"] },
+    ],
 });
 
 export const mkdocsBuilderRegistration: BuilderRegistration = {

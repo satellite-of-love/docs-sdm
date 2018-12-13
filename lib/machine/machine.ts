@@ -39,11 +39,11 @@ import {
     PutTbdInEmptySectionsCommand,
 } from "./emptySectionsContainTbd";
 import { MkdocsSiteGenerator } from "./mkdocsGenerator";
+import { executeMkdocsStrict } from "./mkdocsStrict";
 import {
     TbdFingerprinterRegistration,
     tbdFingerprintListener,
 } from "./tbdFingerprinter";
-import { executeMkdocsStrict } from "./mkdocsStrict";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,

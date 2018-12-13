@@ -37,7 +37,7 @@ const projectToAppInfo = async (p: Project) => {
 };
 
 function mkdocsBuilder(options: { strict: boolean }) {
-    const mkdocsStrictArg = options.strict ? ["--strict"] : []
+    const mkdocsStrictArg = options.strict ? ["--strict"] : [];
     return spawnBuilder({
         name: "mkdocs spawn builder",
         logInterpreter,
@@ -47,7 +47,7 @@ function mkdocsBuilder(options: { strict: boolean }) {
             { command: "mkdocs", args: ["build"].concat(mkdocsStrictArg) },
         ],
     });
-};
+}
 
 export function mkdocsBuilderRegistration(
     options: { strict: boolean } = { strict: false }): BuilderRegistration {

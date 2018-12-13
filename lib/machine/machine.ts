@@ -21,6 +21,7 @@ import {
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     whenPushSatisfies,
+    createGoal,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,
@@ -42,6 +43,7 @@ import {
     TbdFingerprinterRegistration,
     tbdFingerprintListener,
 } from "./tbdFingerprinter";
+import { executeMkdocsStrict } from "./mkdocsStrict";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,
@@ -61,14 +63,17 @@ export function machine(
     const fingerprint = new Fingerprint().with(TbdFingerprinterRegistration)
         .withListener(tbdFingerprintListener);
 
-    const build = new Build().with(mkdocsBuilderRegistration());
+    const build = new Build("mkdocs build")
+        .with(mkdocsBuilderRegistration());
 
-    const strictBuild = new Build().with(mkdocsBuilderRegistration({ strict: true }))
+    const strictMkdocsBuild = createGoal(
+        { displayName: "mkdocs strict" },
+        executeMkdocsStrict);
 
     const mkDocsGoals = goals("mkdocs")
         .plan(autofix, fingerprint)
-        .plan(build, strictBuild)
-        .after(autofix);
+        .plan(build).after(autofix)
+        .plan(strictMkdocsBuild).after(build);
 
     sdm.withPushRules(
         whenPushSatisfies(IsMkdocsProject)

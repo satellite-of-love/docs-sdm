@@ -15,13 +15,13 @@
  */
 import {
     Autofix,
+    createGoal,
     Fingerprint,
     goals,
     PushTest,
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     whenPushSatisfies,
-    createGoal,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,

@@ -16,7 +16,9 @@
 
 import {
     ExecuteGoal,
-    GoalInvocation, spawnAndLog, spawnPromise
+    GoalInvocation,
+    spawnAndLog,
+    spawnPromise,
 } from "@atomist/sdm";
 
 

@@ -15,14 +15,14 @@
  */
 
 import {
-    ExecuteGoal,
-    GoalInvocation,
-    spawnAndLog,
-    spawnPromise,
     doWithProject,
-    ProjectAwareGoalInvocation,
     ExecPromiseError,
     ExecPromiseResult,
+    ExecuteGoal,
+    GoalInvocation,
+    ProjectAwareGoalInvocation,
+    spawnAndLog,
+    spawnPromise,
 } from "@atomist/sdm";
 
 

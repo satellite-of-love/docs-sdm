@@ -1,3 +1,4 @@
+import { configuration } from './../../index';
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -24,8 +25,6 @@ import {
     spawnAndLog,
     spawnPromise,
 } from "@atomist/sdm";
-
-
 
 export const executeMkdocsStrict: ExecuteGoal = doWithProject(async (inv: ProjectAwareGoalInvocation) => {
 

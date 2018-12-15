@@ -1,4 +1,4 @@
-import { configuration } from './../../index';
+import { configuration } from "./../../index";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -37,24 +37,24 @@ export const executeMkdocsStrict: ExecuteGoal = doWithProject(async (inv: Projec
     }
 
     const errors: string[] = [];
-    var mkdocsResult: ExecPromiseError | ExecPromiseResult;
+    let mkdocsResult: ExecPromiseError | ExecPromiseResult;
     try {
         mkdocsResult = await inv.exec("mkdocs", ["build", "--strict"]);
     } catch (e) {
         const epe = e as ExecPromiseError;
-        inv.addressChannels(`mkdocs --strict failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
+        await inv.addressChannels(`mkdocs --strict failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
         errors.push(epe.message);
         mkdocsResult = epe;
     }
     inv.progressLog.write(mkdocsResult.stdout);
     inv.progressLog.write(mkdocsResult.stderr);
 
-    var htlmproofResult: ExecPromiseError | ExecPromiseResult;
+    let htlmproofResult: ExecPromiseError | ExecPromiseResult;
     try {
         htlmproofResult = await inv.exec("./htmlproof.sh", []);
     } catch (e) {
         const epe = e as ExecPromiseError;
-        inv.addressChannels(`htmlproofer failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
+        await inv.addressChannels(`htmlproofer failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
         errors.push(epe.message);
         htlmproofResult = epe;
     }

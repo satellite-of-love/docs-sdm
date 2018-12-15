@@ -22,6 +22,7 @@ import {
     lastLinesLogInterpreter,
 } from "@atomist/sdm";
 import {
+    Builder,
     BuilderRegistration,
     spawnBuilder,
 } from "@atomist/sdm-pack-build";
@@ -36,7 +37,7 @@ const projectToAppInfo = async (p: Project) => {
     };
 };
 
-function mkdocsBuilder(options: { strict: boolean }) {
+function mkdocsBuilder(options: { strict: boolean }): Builder {
     const mkdocsStrictArg = options.strict ? ["--strict"] : [];
     return spawnBuilder({
         name: "mkdocs spawn builder",

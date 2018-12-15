@@ -35,8 +35,8 @@ export const executeMkdocsStrict: ExecuteGoal = doWithProject(async (inv: Projec
         return { code: pipResult.status || 2, message };
     }
 
-    var mkdocsResult: ExecPromiseError | ExecPromiseResult;
     const errors: string[] = [];
+    var mkdocsResult: ExecPromiseError | ExecPromiseResult;
     try {
         mkdocsResult = await inv.exec("mkdocs", ["build", "--strict"]);
     } catch (e) {
@@ -47,6 +47,18 @@ export const executeMkdocsStrict: ExecuteGoal = doWithProject(async (inv: Projec
     }
     inv.progressLog.write(mkdocsResult.stdout);
     inv.progressLog.write(mkdocsResult.stderr);
+
+    var htlmproofResult: ExecPromiseError | ExecPromiseResult;
+    try {
+        htlmproofResult = await inv.exec("./htmlproof.sh", []);
+    } catch (e) {
+        const epe = e as ExecPromiseError;
+        inv.addressChannels(`htmlproofer failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
+        errors.push(epe.message);
+        htlmproofResult = epe;
+    }
+    inv.progressLog.write(htlmproofResult.stdout);
+    inv.progressLog.write(htlmproofResult.stderr);
 
     return { code: errors.length };
 });

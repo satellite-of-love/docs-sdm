@@ -27,12 +27,13 @@ import {
 } from "@atomist/sdm";
 
 export const executeMkdocsStrict: ExecuteGoal = doWithProject(async (inv: ProjectAwareGoalInvocation) => {
-
-    const pipResult = await inv.spawn("pip", ["install", "-r", "requirements.txt"]);
-    if (pipResult.code !== 0) {
-        // this is unexpected
-        const message = pipResult.error ? pipResult.error.message : "See the log for output";
-        return { code: pipResult.status || 2, message };
+    {
+        const pipResult = await inv.spawn("pip", ["install", "-r", "requirements.txt"]);
+        if (pipResult.code !== 0) {
+            // this is unexpected
+            const message = pipResult.error ? pipResult.error.message : "See the log for output";
+            return { code: pipResult.status || 2, message };
+        }
     }
 
     const errors: string[] = [];

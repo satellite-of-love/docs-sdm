@@ -47,7 +47,7 @@ export const executeMkdocsStrict: ExecuteGoal = doWithProject(async (inv: Projec
         mkdocsResult = epe;
     }
     inv.progressLog.write(mkdocsResult.stdout);
-    inv.progressLog.write(mkdocsResult.stderr);
+    inv.progressLog.write(mkdocsResult.stderr); // bananas
 
     let htlmproofResult: ExecPromiseError | ExecPromiseResult;
     try {

@@ -58,4 +58,10 @@ RUN python3.6 get-pip.py
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
+RUN apt-get update && \
+    apt-get install -y zlib1g-dev \
+    ruby-full
+
+RUN gem install bundler
+
 COPY . .

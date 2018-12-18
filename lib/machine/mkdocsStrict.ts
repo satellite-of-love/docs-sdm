@@ -49,6 +49,15 @@ export const executeMkdocsStrict: ExecuteGoal = doWithProject(async (inv: Projec
     inv.progressLog.write(mkdocsResult.stdout);
     inv.progressLog.write(mkdocsResult.stderr);
 
+    {
+        const r = await inv.spawn("bundle", ["install"]);
+        if (r.code !== 0) {
+            // this is unexpected
+            const message = r.error ? r.error.message : "See the log for output";
+            return { code: r.status || 2, message };
+        }
+    }
+
     let htlmproofResult: ExecPromiseError | ExecPromiseResult;
     try {
         htlmproofResult = await inv.exec("./htmlproof.sh", []);

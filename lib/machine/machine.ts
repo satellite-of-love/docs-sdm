@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
     Autofix,
     createGoal,
@@ -25,10 +26,10 @@ import {
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,
+    gitHubGoalStatus,
+    goalState,
 } from "@atomist/sdm-core";
-import {
-    Build,
-} from "@atomist/sdm-pack-build";
+import { Build } from "@atomist/sdm-pack-build";
 import { mkdocsBuilderRegistration } from "./../build/mkdocsBuilder";
 import {
     AlphabetizeGlossaryAutofix,
@@ -81,6 +82,11 @@ export function machine(
     );
 
     sdm.addGeneratorCommand(MkdocsSiteGenerator);
+
+    sdm.addExtensionPacks(
+        goalState(),
+        gitHubGoalStatus(),
+    );
 
     return sdm;
 }

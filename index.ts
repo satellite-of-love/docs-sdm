@@ -15,12 +15,12 @@
  */
 
 import { Configuration } from "@atomist/automation-client";
+import { configureLogzio } from "@atomist/automation-client-ext-logzio";
 import {
     ConfigureOptions,
     configureSdm,
 } from "@atomist/sdm-core";
 import { machine } from "./lib/machine/machine";
-import { configureLogzio } from "@atomist/automation-client-ext-logzio";
 
 const machineOptions: ConfigureOptions = {
     requiredConfigurationValues: [

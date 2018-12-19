@@ -86,7 +86,7 @@ export function machine(
     sdm.addExtensionPacks(
         goalState(),
         gitHubGoalStatus(),
-    )
+    );
 
     return sdm;
 }

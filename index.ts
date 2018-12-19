@@ -20,6 +20,7 @@ import {
     configureSdm,
 } from "@atomist/sdm-core";
 import { machine } from "./lib/machine/machine";
+import { configureLogzio } from "@atomist/automation-client-ext-logzio";
 
 const machineOptions: ConfigureOptions = {
     requiredConfigurationValues: [
@@ -29,6 +30,7 @@ const machineOptions: ConfigureOptions = {
 // Main configuration entry point for this SDM
 export const configuration: Configuration = {
     postProcessors: [
+        configureLogzio,
         configureSdm(machine, machineOptions),
     ],
 };

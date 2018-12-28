@@ -63,5 +63,6 @@ RUN apt-get update && \
     ruby-full
 
 RUN gem install bundler
+RUN gem install nokogiri -v '1.8.4'
 
 COPY . .

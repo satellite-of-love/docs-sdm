@@ -43,7 +43,9 @@ async function calculateTbdFingerprint(cri: PushImpactListenerInvocation): Promi
     const tbdCountsPerFile = await projectUtils.gatherFromFiles(cri.project,
         "docs/**/*.md",
         async (f): Promise<number> => {
-            return countOccurrences(/\{!tbd.md!\}/g, await f.getContent());
+            const tbds = countOccurrences(/\{!tbd.md!\}/g, await f.getContent());
+            const todos = countOccurrences(/\bTODO\b/gi, await f.getContent());
+            return tbds + todos;
         });
     const totalTbds = sum(tbdCountsPerFile);
     return {

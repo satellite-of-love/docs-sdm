@@ -60,7 +60,7 @@ describe("Fingerprinting a project for TBD count", () => {
         const fingerprint2 = await invoke(projectWithTODOs);
 
         assert.strictEqual(fingerprint2.data, "2");
-    })
+    });
 
     it("does not count TODO in the middle of a word", async () => {
         const projectWithTODOs = InMemoryProject.of({
@@ -71,7 +71,7 @@ describe("Fingerprinting a project for TBD count", () => {
         const fingerprint2 = await invoke(projectWithTODOs);
 
         assert.strictEqual(fingerprint2.data, "0");
-    })
+    });
 
     it("Handles a file with no TBD", async () => {
 

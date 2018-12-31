@@ -39,6 +39,7 @@ import {
     PutTbdInEmptySectionsAutofix,
     PutTbdInEmptySectionsCommand,
 } from "./emptySectionsContainTbd";
+import { listTodoNontransform, listTodoNontransformRegistration } from "./listTodoCommand";
 import { MkdocsSiteGenerator } from "./mkdocsGenerator";
 import { executeMkdocsStrict } from "./mkdocsStrict";
 import {
@@ -57,6 +58,8 @@ export function machine(
 
     sdm.addCodeTransformCommand(PutTbdInEmptySectionsCommand);
     sdm.addCodeTransformCommand(AlphabetizeGlossaryCommand);
+
+    sdm.addCodeTransformCommand(listTodoNontransformRegistration());
 
     const autofix = new Autofix().with(PutTbdInEmptySectionsAutofix)
         .with(AlphabetizeGlossaryAutofix);

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { InMemoryProject, NoParameters } from "@atomist/automation-client";
+import {
+    InMemoryProject,
+    NoParameters,
+} from "@atomist/automation-client";
 import { PushAwareParametersInvocation } from "@atomist/sdm";
 import * as assert from "assert";
 import { listTodoNontransform } from "./../../lib/machine/listTodoCommand";

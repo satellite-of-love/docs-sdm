@@ -39,7 +39,10 @@ import {
     PutTbdInEmptySectionsAutofix,
     PutTbdInEmptySectionsCommand,
 } from "./emptySectionsContainTbd";
-import { listTodoNontransform, listTodoNontransformRegistration } from "./listTodoCommand";
+import {
+    listTodoNontransform,
+    listTodoNontransformRegistration,
+} from "./listTodoCommand";
 import { MkdocsSiteGenerator } from "./mkdocsGenerator";
 import { executeMkdocsStrict } from "./mkdocsStrict";
 import {

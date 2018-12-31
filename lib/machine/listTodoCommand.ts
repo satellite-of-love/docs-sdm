@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-import { NoParameters, Project } from "@atomist/automation-client";
+import {
+    NoParameters,
+    Project,
+} from "@atomist/automation-client";
 import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
-import { CodeTransform, CodeTransformRegistration } from "@atomist/sdm";
+import {
+    CodeTransform,
+    CodeTransformRegistration,
+} from "@atomist/sdm";
 import * as slack from "@atomist/slack-messages";
 import _ = require("lodash");
 

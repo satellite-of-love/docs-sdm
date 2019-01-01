@@ -42,6 +42,7 @@ describe("listing TODOs in docs", () => {
             path: "docs/something.md",
             content: "blah blah TODO blah",
         });
+        // tslint:disable-next-line
         inputProject.id = { url: "https://linkylinky" } as RepoRef;
         const fakeInvocation = FakeInvocation.asPushAwareParametersInvocation();
 

@@ -18,6 +18,7 @@ import {
     InMemoryProject,
     NoParameters,
 } from "@atomist/automation-client";
+import { InMemoryProject, NoParameters, RepoRef } from "@atomist/automation-client";
 import { PushAwareParametersInvocation } from "@atomist/sdm";
 import * as assert from "assert";
 import { listTodoNontransform } from "./../../lib/machine/listTodoCommand";
@@ -41,6 +42,7 @@ describe("listing TODOs in docs", () => {
             path: "docs/something.md",
             content: "blah blah TODO blah",
         });
+        inputProject.id = { url: "https://linkylinky" } as RepoRef;
         const fakeInvocation = FakeInvocation.asPushAwareParametersInvocation();
 
         const result = await listTodoNontransform(inputProject, fakeInvocation);

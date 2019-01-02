@@ -25,7 +25,7 @@ describe("listing TODOs in docs", () => {
     it("lists some TODOs", async () => {
         const inputProject = InMemoryProject.of({
             path: "docs/something.md",
-            content: "blah blah TODO blah",
+            content: "#Line 1\n\nblah blah *TODO blah\n\n## more stuff",
         });
         // tslint:disable-next-line
         inputProject.id = { url: "https://linkylinky" } as RepoRef;
@@ -34,6 +34,27 @@ describe("listing TODOs in docs", () => {
 
         assert.strictEqual(results.length, 1);
         const one = results[0];
-        assert.strictEqual(one.lineContent, "blah blah TODO blah");
+        assert.strictEqual(one.lineContent, "blah blah *TODO blah");
+        assert.strictEqual(one.lineFrom1, 3);
+        assert.strictEqual(one.emphasis, 1);
+    });
+
+    it("orders TODOs by asterisks", async () => {
+        const inputProject = InMemoryProject.of({
+            path: "docs/something.md",
+            content: "#Line 1\n\nblah blah TODO blah\n\n## more stuff\ntwo star **TODO",
+        },
+            {
+                path: "docs/somethingElse.md",
+                content: "#Line 1\n\nOne star *TODO\n\n## more stuff",
+            });
+        // tslint:disable-next-line
+        inputProject.id = { url: "https://linkylinky" } as RepoRef;
+
+        const results = await listTodoCodeInspection(inputProject, undefined);
+
+        const lines = results.map(r => r.lineContent)
+        assert.strictEqual(results.length, 3);
+        assert.deepEqual(lines, ["two star **TODO", "One star *TODO", "blah blah TODO blah"]);
     });
 });

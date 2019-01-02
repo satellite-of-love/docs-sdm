@@ -30,10 +30,11 @@ import _ = require("lodash");
 const todoRegex = /\btodo\b/i;
 const tbdRegex = /\btbd\b/i;
 
-interface Todo {
+export interface Todo {
     path: string;
     lineFrom1: number;
     lineContent: string;
+    emphasis: number;
 }
 /*
  * This does not need to be a transform. It does not change the project.
@@ -41,21 +42,37 @@ interface Todo {
  */
 export const listTodoCodeInspection: CodeInspection<Todo[]> = async (project, inv) => {
     const todos: Todo[] = _.flatten(await gatherFromFiles(project, "**/*.md", async f => {
-        const lines = (await f.getContent()).split("\n");
+        const lines: string[] = (await f.getContent()).split("\n");
         const items = lines
-            .filter(l => todoRegex.test(l) || tbdRegex.test(l))
             .map((l, i) => {
-                const item = {
-                    path: f.path,
-                    lineFrom1: i + 1,
-                    lineContent: l,
-                };
-                return item;
+                if (todoRegex.test(l) || tbdRegex.test(l)) {
+                    const item: Todo = {
+                        path: f.path,
+                        lineFrom1: i + 1,
+                        lineContent: l,
+                        emphasis: howBadIsIt(l),
+                    };
+                    return item;
+                }
+                return undefined;
             });
-        return items;
+        return items.filter(a => !!a);
     }));
-    return todos;
+    return _.sortBy(todos, t => 0 - t.emphasis);
 };
+
+const commonIncludeRegex = /{!.*!}/g;
+const htmlCommentRegex = /<!--/g;
+
+function howBadIsIt(todoLine: string) {
+    const asterisks = todoLine.split("*").length - 1;
+    const withoutSyntaxExclamations = todoLine
+        .replace(commonIncludeRegex, "")
+        .replace(htmlCommentRegex, "");
+    const exclamations = withoutSyntaxExclamations.split("!").length - 1;
+
+    return asterisks + exclamations;
+}
 
 async function reportTodos(
     results: Array<CodeInspectionResult<Todo[]>>,
@@ -66,12 +83,30 @@ async function reportTodos(
     return;
 }
 
-function constructMessage(projectId: RepoRef, todos: Todo[]): string {
-    const header = slack.url(projectId.url, `${projectId.owner}/${projectId.repo}`);
-    return header + "\n\n" + todos.map(t => `${t.path}:${t.lineFrom1} ${t.lineContent}`).join("\n");
+function constructMessage(projectId: RepoRef, todos: Todo[]): slack.SlackMessage {
+    const header = `There are ${todos.length} TODOs in ` +
+        slack.url(projectId.url, `${projectId.owner}/${projectId.repo}`) + ":";
+
+    const message: slack.SlackMessage = {
+        text: header,
+        attachments: [{
+            fallback: "All the todos",
+            text: todos.map(t => constructTodoLine(projectId, t)).join("\n")
+        }],
+        "unfurl_links": false,
+        "unfurl_media": false
+    }
+    return message; //header + "\n\n" + todos.map(t => `${t.path}:${t.lineFrom1} ${t.lineContent}`).join("\n");
 }
 
-export function listTodoNontransformRegistration(): CodeInspectionRegistration<Todo[]> {
+function constructTodoLine(projectId: RepoRef, todo: Todo): string {
+    const branch = projectId.branch || "master";
+    return slack.url(`${projectId.url}/edit/${branch}/${todo.path}#L${todo.lineFrom1}`,
+        `${todo.path}:${todo.lineFrom1}`) +
+        `: ${todo.lineContent}`;
+}
+
+export function listTodoCodeInspectionRegistration(): CodeInspectionRegistration<Todo[]> {
     return {
         name: "listTodo",
         intent: ["list todos", "what needs done"],

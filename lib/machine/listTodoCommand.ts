@@ -85,7 +85,8 @@ async function reportTodos(
 
 function constructMessage(projectId: RepoRef, todos: Todo[]): slack.SlackMessage {
     const header = `There are ${todos.length} TODOs in ` +
-        slack.url(projectId.url, `${projectId.owner}/${projectId.repo}`) + ":";
+        slack.url(projectId.url, `${projectId.owner}/${projectId.repo}`) +
+        (todos.length > 0 ? ":" : ".");
 
     const message: slack.SlackMessage = {
         text: header,
@@ -96,14 +97,14 @@ function constructMessage(projectId: RepoRef, todos: Todo[]): slack.SlackMessage
         unfurl_links: false,
         unfurl_media: false,
     };
-    return message; // header + "\n\n" + todos.map(t => `${t.path}:${t.lineFrom1} ${t.lineContent}`).join("\n");
+    return message;
 }
 
 function constructTodoLine(projectId: RepoRef, todo: Todo): string {
     const branch = projectId.branch || "master";
     return slack.url(`${projectId.url}/edit/${branch}/${todo.path}#L${todo.lineFrom1}`,
         `${todo.path}:${todo.lineFrom1}`) +
-        `: ${todo.lineContent}`;
+        ` ${todo.lineContent}`;
 }
 
 export function listTodoCodeInspectionRegistration(): CodeInspectionRegistration<Todo[]> {

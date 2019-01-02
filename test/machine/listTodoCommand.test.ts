@@ -53,8 +53,8 @@ describe("listing TODOs in docs", () => {
 
         const results = await listTodoCodeInspection(inputProject, undefined);
 
-        const lines = results.map(r => r.lineContent)
+        const lines = results.map(r => r.lineContent);
         assert.strictEqual(results.length, 3);
-        assert.deepEqual(lines, ["two star **TODO", "One star *TODO", "blah blah TODO blah"]);
+        assert.deepStrictEqual(lines, ["two star **TODO", "One star *TODO", "blah blah TODO blah"]);
     });
 });

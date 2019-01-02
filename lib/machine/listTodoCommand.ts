@@ -64,7 +64,7 @@ export const listTodoCodeInspection: CodeInspection<Todo[]> = async (project, in
 const commonIncludeRegex = /{!.*!}/g;
 const htmlCommentRegex = /<!--/g;
 
-function howBadIsIt(todoLine: string) {
+function howBadIsIt(todoLine: string): number {
     const asterisks = todoLine.split("*").length - 1;
     const withoutSyntaxExclamations = todoLine
         .replace(commonIncludeRegex, "")
@@ -91,12 +91,12 @@ function constructMessage(projectId: RepoRef, todos: Todo[]): slack.SlackMessage
         text: header,
         attachments: [{
             fallback: "All the todos",
-            text: todos.map(t => constructTodoLine(projectId, t)).join("\n")
+            text: todos.map(t => constructTodoLine(projectId, t)).join("\n"),
         }],
-        "unfurl_links": false,
-        "unfurl_media": false
-    }
-    return message; //header + "\n\n" + todos.map(t => `${t.path}:${t.lineFrom1} ${t.lineContent}`).join("\n");
+        unfurl_links: false,
+        unfurl_media: false,
+    };
+    return message; // header + "\n\n" + todos.map(t => `${t.path}:${t.lineFrom1} ${t.lineContent}`).join("\n");
 }
 
 function constructTodoLine(projectId: RepoRef, todo: Todo): string {

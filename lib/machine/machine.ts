@@ -48,6 +48,7 @@ import {
     TbdFingerprinterRegistration,
     tbdFingerprintListener,
 } from "./tbdFingerprinter";
+import { executeHtmlproof } from "./htmlproof";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,
@@ -76,10 +77,15 @@ export function machine(
         { displayName: "mkdocs strict" },
         executeMkdocsStrict);
 
+    const htmlproof = createGoal(
+        { displayName: "htmlproof" },
+        executeHtmlproof);
+
     const mkDocsGoals = goals("mkdocs")
         .plan(autofix, fingerprint)
         .plan(build).after(autofix)
-        .plan(strictMkdocsBuild).after(build);
+        .plan(strictMkdocsBuild).after(build)
+        .plan(htmlproof).after(build);
 
     sdm.withPushRules(
         whenPushSatisfies(IsMkdocsProject)

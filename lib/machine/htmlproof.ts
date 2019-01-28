@@ -22,7 +22,7 @@ import {
     ProjectAwareGoalInvocation,
 } from "@atomist/sdm";
 
-export const executeMkdocsStrict: ExecuteGoal = doWithProject(async (inv: ProjectAwareGoalInvocation) => {
+export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAwareGoalInvocation) => {
     {
         const pipResult = await inv.spawn("pip", ["install", "-r", "requirements.txt"]);
         if (pipResult.code !== 0) {
@@ -35,15 +35,36 @@ export const executeMkdocsStrict: ExecuteGoal = doWithProject(async (inv: Projec
     const errors: string[] = [];
     let mkdocsResult: ExecPromiseError | ExecPromiseResult;
     try {
-        mkdocsResult = await inv.exec("mkdocs", ["build", "--strict"]);
+        mkdocsResult = await inv.exec("mkdocs", ["build"]);
     } catch (e) {
         const epe = e as ExecPromiseError;
-        await inv.addressChannels(`mkdocs --strict failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
+        await inv.addressChannels(`mkdocs failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
         errors.push(epe.message);
         mkdocsResult = epe;
     }
     inv.progressLog.write(mkdocsResult.stdout);
     inv.progressLog.write(mkdocsResult.stderr);
+
+    {
+        const r = await inv.spawn("bundle", ["install"]);
+        if (r.code !== 0) {
+            // this is unexpected
+            const message = r.error ? r.error.message : "See the log for output";
+            return { code: r.status || 2, message };
+        }
+    }
+
+    let htlmproofResult: ExecPromiseError | ExecPromiseResult;
+    try {
+        htlmproofResult = await inv.exec("./htmlproof.sh", []);
+    } catch (e) {
+        const epe = e as ExecPromiseError;
+        await inv.addressChannels(`htmlproofer failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
+        errors.push(epe.message);
+        htlmproofResult = epe;
+    }
+    inv.progressLog.write(htlmproofResult.stdout);
+    inv.progressLog.write(htlmproofResult.stderr);
 
     return { code: errors.length };
 });

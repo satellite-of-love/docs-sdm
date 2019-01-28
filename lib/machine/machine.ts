@@ -39,6 +39,7 @@ import {
     PutTbdInEmptySectionsAutofix,
     PutTbdInEmptySectionsCommand,
 } from "./emptySectionsContainTbd";
+import { executeHtmlproof } from "./htmlproof";
 import {
     listTodoCodeInspectionRegistration,
 } from "./listTodoCommand";
@@ -48,7 +49,6 @@ import {
     TbdFingerprinterRegistration,
     tbdFingerprintListener,
 } from "./tbdFingerprinter";
-import { executeHtmlproof } from "./htmlproof";
 
 export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,

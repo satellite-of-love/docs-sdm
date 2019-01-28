@@ -18,7 +18,9 @@ import {
     Autofix,
     createGoal,
     Fingerprint,
+    goal,
     goals,
+    lastLinesLogInterpreter,
     PushTest,
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
@@ -39,7 +41,7 @@ import {
     PutTbdInEmptySectionsAutofix,
     PutTbdInEmptySectionsCommand,
 } from "./emptySectionsContainTbd";
-import { executeHtmlproof } from "./htmlproof";
+import { executeHtmlproof, MkdocsBuildAfterCheckout } from "./htmlproof";
 import {
     listTodoCodeInspectionRegistration,
 } from "./listTodoCommand";
@@ -77,9 +79,11 @@ export function machine(
         { displayName: "mkdocs strict" },
         executeMkdocsStrict);
 
-    const htmlproof = createGoal(
+    const htmlproof = goal(
         { displayName: "htmlproof" },
-        executeHtmlproof);
+        executeHtmlproof,
+        { logInterpreter: lastLinesLogInterpreter("bummer", 10) })
+        .withProjectListener(MkdocsBuildAfterCheckout);
 
     const mkDocsGoals = goals("mkdocs")
         .plan(autofix, fingerprint)

@@ -55,5 +55,6 @@ export function mkdocsBuilderRegistration(
     return {
         name: "mkdocs build",
         builder: mkdocsBuilder(options),
+        logInterpreter: lastLinesLogInterpreter("bummer", 10),
     };
 }

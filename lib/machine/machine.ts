@@ -32,7 +32,10 @@ import {
     goalState,
 } from "@atomist/sdm-core";
 import { Build } from "@atomist/sdm-pack-build";
-import { mkdocsBuilderRegistration } from "./../build/mkdocsBuilder";
+import { executePublishToS3 } from "../publish/publishToS3";
+import {
+    mkdocsBuilderRegistration,
+} from "./../build/mkdocsBuilder";
 import {
     AlphabetizeGlossaryAutofix,
     AlphabetizeGlossaryCommand,
@@ -85,11 +88,17 @@ export function machine(
         { logInterpreter: lastLinesLogInterpreter("bummer", 10) })
         .withProjectListener(MkdocsBuildAfterCheckout);
 
+    const publish = goal({ displayName: "publishToS3" },
+        executePublishToS3,
+        { logInterpreter: lastLinesLogInterpreter("no S3 for you", 10) })
+        .withProjectListener(MkdocsBuildAfterCheckout);
+
     const mkDocsGoals = goals("mkdocs")
         .plan(autofix, fingerprint)
         .plan(build).after(autofix)
         .plan(strictMkdocsBuild).after(build)
-        .plan(htmlproof).after(build);
+        .plan(htmlproof).after(build)
+        .plan(publish).after(build);
 
     sdm.withPushRules(
         whenPushSatisfies(IsMkdocsProject)

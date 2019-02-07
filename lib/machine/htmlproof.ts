@@ -69,7 +69,7 @@ export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
     },
 };
 
-// TODO: move to SDM?
+// TODO: move to @atomist/sdm
 /**
  * Convenience method to create project aware goal invocations
  */

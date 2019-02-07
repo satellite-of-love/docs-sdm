@@ -44,7 +44,10 @@ import {
     PutTbdInEmptySectionsAutofix,
     PutTbdInEmptySectionsCommand,
 } from "./emptySectionsContainTbd";
-import { executeHtmlproof, MkdocsBuildAfterCheckout } from "./htmlproof";
+import {
+    executeHtmlproof,
+    MkdocsBuildAfterCheckout,
+} from "./htmlproof";
 import {
     listTodoCodeInspectionRegistration,
 } from "./listTodoCommand";

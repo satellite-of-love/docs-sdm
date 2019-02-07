@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { GitProject, logger, toStringArray } from "@atomist/automation-client";
+import {
+    GitProject,
+    logger,
+    toStringArray,
+} from "@atomist/automation-client";
 import {
     doWithProject,
     execPromise,

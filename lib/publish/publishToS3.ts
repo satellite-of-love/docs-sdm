@@ -15,7 +15,9 @@
  */
 
 import {
-    doWithProject, ExecuteGoal, ExecuteGoalResult,
+    doWithProject,
+    ExecuteGoal,
+    ExecuteGoalResult,
     ProjectAwareGoalInvocation,
 } from "@atomist/sdm";
 

@@ -23,7 +23,7 @@ import {
 
 export const executePublishToS3: ExecuteGoal = doWithProject(
     async (inv: ProjectAwareGoalInvocation): Promise<ExecuteGoalResult> => {
-        inv.addressChannels("Let's pretend I just published the docs to S3");
+        await inv.addressChannels("Let's pretend I just published the docs to S3");
         return {
             code: 0,
         };

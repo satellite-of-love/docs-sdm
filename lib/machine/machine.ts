@@ -16,7 +16,6 @@
 
 import {
     Autofix,
-    createGoal,
     Fingerprint,
     goal,
     goals,
@@ -81,7 +80,7 @@ export function machine(
     const build = new Build("mkdocs build")
         .with(mkdocsBuilderRegistration());
 
-    const strictMkdocsBuild = createGoal(
+    const strictMkdocsBuild = goal(
         { displayName: "mkdocs strict" },
         executeMkdocsStrict);
 
@@ -101,7 +100,7 @@ export function machine(
         .plan(build).after(autofix)
         .plan(strictMkdocsBuild).after(build)
         .plan(htmlproof).after(build)
-        .plan(publish).after(build);
+        .plan(publish).after(htmlproof);
 
     sdm.withPushRules(
         whenPushSatisfies(IsMkdocsProject)

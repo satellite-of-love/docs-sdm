@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { configurationValue, Project } from "@atomist/automation-client";
+import {
+    configurationValue,
+    Project,
+} from "@atomist/automation-client";
 import { doWithFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import {
     doWithProject,

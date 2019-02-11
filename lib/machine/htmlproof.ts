@@ -91,8 +91,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-                  args: string | string[] = [],
-                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+        args: string | string[] = [],
+        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -104,14 +104,6 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
 }
 
 export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAwareGoalInvocation) => {
-    {
-        const r = await inv.spawn("bundle", ["install"]);
-        if (r.code !== 0) {
-            // this is unexpected
-            const message = r.error ? r.error.message : "See the log for output";
-            return { code: r.status || 2, message };
-        }
-    }
 
     const errors: string[] = []; // TODO: can eliminate because we are only doing one thing now
 

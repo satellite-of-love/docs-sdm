@@ -62,7 +62,6 @@ RUN apt-get update && \
     apt-get install -y zlib1g-dev \
     ruby-full
 
-RUN gem install bundler -v '2.0.1'
-RUN gem install nokogiri -v '1.10.1'
+RUN gem install html-proofer
 
 COPY . .

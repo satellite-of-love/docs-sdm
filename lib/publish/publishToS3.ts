@@ -16,8 +16,10 @@
 
 import {
     configurationValue,
+    HandlerContext,
     logger,
     Project,
+    RepoRef,
 } from "@atomist/automation-client";
 import { doWithFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import {
@@ -27,6 +29,7 @@ import {
     ProgressLog,
     ProjectAwareGoalInvocation,
     slackErrorMessage,
+    slackWarningMessage,
 } from "@atomist/sdm";
 import {
     Attachment,
@@ -53,48 +56,46 @@ export async function doIt(inv: ProjectAwareGoalInvocation): Promise<ExecuteGoal
         });
         const result = await pushToS3(s3, inv.project, {
             bucketName: "docs-sdm.atomist.com",
+            region: "us-west-2",
             globPattern: "site/**/*",
-            pathPrefix: inv.id.sha,
-            public: true,
+            pathTranslation: path => inv.id.sha + "/" + path.replace("site/", ""),
+            indexPath: inv.id.sha + "/",
         });
         inv.progressLog.write("URL: " + result.url);
         inv.progressLog.write(result.warnings.join("\n"));
 
-        await inv.addressChannels(formatHappyMessage(result.url, result.warnings));
+        if (result.warnings.length > 0) {
+            await inv.addressChannels(formatWarningMessage(result.url, result.warnings, inv.id, inv.context));
+        }
+
+        return {
+            code: 0,
+            externalUrls: [{ label: "Check it out!", url: result.url }],
+        };
     } catch (e) {
         return { code: 98, message: e.message };
     }
-    return {
-
-        code: 0,
-    };
 }
 
-function formatHappyMessage(url: string, warnings: string[]): SlackMessage {
-    const attachments: Attachment[] = warnings.length === 0 ? [] : [{
-        fallback: "boo",
-        title: "Warnings",
-        text: warnings.join("\n"),
-        color: "#c95456",
-    }];
-    return {
-        text: "Published to S3: " + url,
-        attachments,
-    };
+function formatWarningMessage(url: string, warnings: string[], id: RepoRef, ctx: HandlerContext): SlackMessage {
+    return slackWarningMessage("Some files were not uploaded to S3", warnings.join("\n"), ctx, {
+        author_name: `published docs from ${id.owner}/${id.repo}#${id.sha.substr(0, 7)}`,
+        author_link: url,
+    });
 }
 
 async function pushToS3(s3: S3, project: Project, params: {
     bucketName: string,
+    region: string,
     globPattern: string,
-    pathPrefix: string, // todo: function from pathname in project to pathname in bucket instead
-    public: boolean,
+    pathTranslation: (filePath: string) => string,
+    indexPath: string,
 }): Promise<{ url: string, warnings: string[] }> {
-    const { bucketName, globPattern, pathPrefix } = params;
-    const keyPrefix = pathPrefix.endsWith("/") ? pathPrefix : pathPrefix + "/";
+    const { bucketName, globPattern, pathTranslation, region, indexPath } = params;
     const warnings: string[] = [];
     await doWithFiles(project, globPattern, async file => {
         const content = await file.getContent();
-        const key = keyPrefix + file.path;
+        const key = pathTranslation(file.path);
         const contentType = mime.lookup(file.path);
         if (contentType === false) {
             warnings.push("Not uploading: Unable to determine content type for " + file.path);
@@ -109,15 +110,10 @@ async function pushToS3(s3: S3, project: Project, params: {
             ContentType: contentType,
         })();
         logger.info("OK! Published to " + key);
-
-        // .catch(err => {
-        //     console.log("HERE I AM IN THIS THING");
-        //     console.log(err);
-        // });
     });
 
     return {
-        url: `http://${bucketName}.s3-website.us-west-2.amazonaws.com/${keyPrefix}`,
+        url: `http://${bucketName}.s3-website.${region}.amazonaws.com/${indexPath}`,
         warnings,
     };
 }

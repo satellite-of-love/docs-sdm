@@ -41,7 +41,12 @@ export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
     events: [GoalProjectListenerEvent.before],
     listener: async (project, goalInvocation, event) => {
         if (!await project.hasDirectory("site")) {
-            return { code: 0, message: "Looks OK, site directory already exists" };
+            const siteRoot = project.getFile("site/index.html");
+            if (siteRoot) {
+                return { code: 0, message: "Looks OK, site directory already exists" };
+            } else {
+                logger.error("WTAF, site/ exists but not index.html");
+            }
         }
 
         const inv: ProjectAwareGoalInvocation = toProjectAwareGoalInvocation(project, goalInvocation);

@@ -63,6 +63,7 @@ export async function doIt(inv: ProjectAwareGoalInvocation): Promise<ExecuteGoal
         });
         inv.progressLog.write("URL: " + result.url);
         inv.progressLog.write(result.warnings.join("\n"));
+        inv.progressLog.write(`${result.fileCount} files uploaded to ${result.url}`);
 
         if (result.warnings.length > 0) {
             await inv.addressChannels(formatWarningMessage(result.url, result.warnings, inv.id, inv.context));
@@ -90,10 +91,12 @@ async function pushToS3(s3: S3, project: Project, params: {
     globPattern: string,
     pathTranslation: (filePath: string) => string,
     indexPath: string,
-}): Promise<{ url: string, warnings: string[] }> {
+}): Promise<{ url: string, warnings: string[], fileCount: number }> {
     const { bucketName, globPattern, pathTranslation, region, indexPath } = params;
     const warnings: string[] = [];
+    let fileCount = 0;
     await doWithFiles(project, globPattern, async file => {
+        fileCount++;
         const content = await file.getContent();
         const key = pathTranslation(file.path);
         const contentType = mime.lookup(file.path);
@@ -115,5 +118,6 @@ async function pushToS3(s3: S3, project: Project, params: {
     return {
         url: `http://${bucketName}.s3-website.${region}.amazonaws.com/${indexPath}`,
         warnings,
+        fileCount,
     };
 }

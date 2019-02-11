@@ -99,8 +99,8 @@ export function machine(
         .plan(autofix, fingerprint)
         .plan(build).after(autofix)
         .plan(strictMkdocsBuild).after(build)
-        .plan(htmlproof).after(build)
-        .plan(publish).after(htmlproof);
+        .plan(publish).after(build)
+        .plan(htmlproof).after(publish);
 
     sdm.withPushRules(
         whenPushSatisfies(IsMkdocsProject)

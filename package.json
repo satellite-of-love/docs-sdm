@@ -35,7 +35,9 @@
     "@atomist/tree-path": "^1.0.2",
     "@types/lodash": "^4.14.118",
     "@types/node": "^10.5.7",
-    "lodash": "^4.17.11"
+    "aws-sdk": "^2.399.0",
+    "lodash": "^4.17.11",
+    "mime-types": "^2.1.21"
   },
   "devDependencies": {
     "@atomist/sdm-local": "^1.0.5-master.20190201192832",

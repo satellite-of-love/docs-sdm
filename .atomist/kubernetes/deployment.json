@@ -34,7 +34,7 @@
                 "name": "ATOMIST_CONFIG",
                 "valueFrom": {
                   "secretKeyRef": {
-                    "name": "atm-sdm",
+                    "name": "docs-sdm",
                     "key": "config"
                   }
                 }

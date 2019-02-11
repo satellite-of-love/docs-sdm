@@ -46,7 +46,8 @@ export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
 
         const inv: ProjectAwareGoalInvocation = toProjectAwareGoalInvocation(project, goalInvocation);
 
-        logger.error("I AM THE THING and I got event " + event + " for goal " + inv.goal.name);
+        logger.info("I AM THE MkdocsBuildAfterCheckout GoalProjectListener and I got event "
+            + event + " for goal " + inv.goal.name);
         {
             const pipResult = await inv.spawn("pip", ["install", "-r", "requirements.txt"]);
             if (pipResult.code !== 0) {

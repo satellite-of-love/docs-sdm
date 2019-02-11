@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Project } from "@atomist/automation-client";
+import { configurationValue, Project } from "@atomist/automation-client";
 import { doWithFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import {
     doWithProject,
@@ -23,14 +23,11 @@ import {
     ProgressLog,
     ProjectAwareGoalInvocation,
 } from "@atomist/sdm";
-import { S3 } from "aws-sdk";
+import { Credentials, S3 } from "aws-sdk";
 import * as mime from "mime-types";
-import * as path from "path";
 import { promisify } from "util";
 
-const s3 = new S3();
-
-function putObject(params: S3.Types.PutObjectRequest): () => Promise<S3.Types.PutObjectOutput> {
+function putObject(s3: S3, params: S3.Types.PutObjectRequest): () => Promise<S3.Types.PutObjectOutput> {
     return promisify<S3.Types.PutObjectOutput>(cb => s3.putObject(params, cb));
 }
 
@@ -42,8 +39,11 @@ export async function doIt(inv: ProjectAwareGoalInvocation): Promise<ExecuteGoal
         return { code: 99, message: "SHA is not defined. I need that" };
     }
     try {
+        const s3 = new S3({
+            credentials: new Credentials(inv.configuration.sdm.aws.accessKey, inv.configuration.sdm.aws.secretKey),
+        });
         const result = await pushToS3(s3, inv.progressLog, inv.project, {
-            bucketName: "docs-build.atomist.com",
+            bucketName: "docs-sdm.atomist.com",
             globPattern: "site/**/*",
             pathPrefix: inv.id.sha,
             public: true,
@@ -62,7 +62,7 @@ export async function doIt(inv: ProjectAwareGoalInvocation): Promise<ExecuteGoal
 async function pushToS3(s3: S3, progressLog: ProgressLog, project: Project, params: {
     bucketName: string,
     globPattern: string,
-    pathPrefix: string,
+    pathPrefix: string, // todo: function from pathname in project to pathname in bucket instead
     public: boolean,
 }) {
     const { bucketName, globPattern, pathPrefix } = params;
@@ -77,18 +77,19 @@ async function pushToS3(s3: S3, progressLog: ProgressLog, project: Project, para
             progressLog.write("WARNING: No content-type found for " + file.path);
         }
         console.log("Publishing to " + key + " with ACL " + acl);
-        await putObject({
+        await putObject(s3, {
             Bucket: bucketName,
             Key: key,
             Body: content,
-            ACL: acl,
             ContentType: contentType,
         })();
+        console.log("OK! Published to " + key + " with ACL " + acl);
+
         // .catch(err => {
         //     console.log("HERE I AM IN THIS THING");
         //     console.log(err);
         // });
     });
 
-    return { url: `https://s3.amazonaws.com/${bucketName}/${keyPrefix}` };
+    return { url: `http://${bucketName}.s3-website.us-west-2.amazonaws.com/${keyPrefix}` };
 }

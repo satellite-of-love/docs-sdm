@@ -16,6 +16,7 @@
 
 import {
     configurationValue,
+    logger,
     Project,
 } from "@atomist/automation-client";
 import { doWithFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
@@ -84,7 +85,7 @@ async function pushToS3(s3: S3, project: Project, params: {
     globPattern: string,
     pathPrefix: string, // todo: function from pathname in project to pathname in bucket instead
     public: boolean,
-}) {
+}): Promise<{ url: string, warnings: string[] }> {
     const { bucketName, globPattern, pathPrefix } = params;
     const keyPrefix = pathPrefix.endsWith("/") ? pathPrefix : pathPrefix + "/";
     const warnings: string[] = [];
@@ -97,14 +98,14 @@ async function pushToS3(s3: S3, project: Project, params: {
             return;
         }
 
-        console.log(`File: ${file.path}, key, ${key}, contentType: ${contentType}`);
+        logger.info(`File: ${file.path}, key, ${key}, contentType: ${contentType}`);
         await putObject(s3, {
             Bucket: bucketName,
             Key: key,
             Body: content,
             ContentType: contentType,
         })();
-        console.log("OK! Published to " + key);
+        logger.info("OK! Published to " + key);
 
         // .catch(err => {
         //     console.log("HERE I AM IN THIS THING");

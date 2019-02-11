@@ -43,7 +43,7 @@ export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
         if (!await project.hasDirectory("site")) {
             const siteRoot = project.getFile("site/index.html");
             if (siteRoot) {
-                return { code: 0, message: "Looks OK, site directory already exists" };
+                return { code: 0, message: "Looks OK, site directory already exists in " + project.baseDir };
             } else {
                 logger.error("WTAF, site/ exists but not index.html");
             }
@@ -111,6 +111,18 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
 export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAwareGoalInvocation) => {
 
     const errors: string[] = []; // TODO: can eliminate because we are only doing one thing now
+
+    inv.progressLog.write("Running in " + inv.project.baseDir);
+    if (inv.project.hasDirectory("site")) {
+        inv.progressLog.write("There is site dir, good");
+    } else {
+        inv.progressLog.write("There is not a site dir, BAD");
+        return {
+            code: 10,
+            message:
+                "Site dir not found. This should have been created by MkdocsBuildAfterCheckout GoalProjectListener.",
+        };
+    }
 
     let htlmproofResult: ExecPromiseError | ExecPromiseResult;
     try {

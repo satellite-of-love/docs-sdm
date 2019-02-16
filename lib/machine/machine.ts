@@ -15,6 +15,7 @@
  */
 
 import {
+    allOf,
     Autofix,
     Fingerprint,
     goal,
@@ -27,7 +28,6 @@ import {
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     whenPushSatisfies,
-    allOf,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,

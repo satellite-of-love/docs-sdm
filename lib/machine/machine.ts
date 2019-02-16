@@ -19,11 +19,15 @@ import {
     Fingerprint,
     goal,
     goals,
+    ImmaterialGoals,
+    isMaterialChange,
     lastLinesLogInterpreter,
+    not,
     PushTest,
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     whenPushSatisfies,
+    allOf,
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,
@@ -103,6 +107,11 @@ export function machine(
         .plan(htmlproof).after(publish);
 
     sdm.withPushRules(
+        whenPushSatisfies(allOf(IsMkdocsProject, not(isMaterialChange({
+            extensions: [".md", ".html"],
+            files: ["mkdocs.yml"],
+        }))))
+            .setGoals(ImmaterialGoals.andLock()),
         whenPushSatisfies(IsMkdocsProject)
             .setGoals(mkDocsGoals),
     );

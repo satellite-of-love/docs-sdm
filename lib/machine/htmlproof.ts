@@ -124,6 +124,24 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
         };
     }
 
+    try { // diagnostic of "./site does not exist" error
+        const pwdResult = await inv.exec("pwd", []);
+        inv.progressLog.write(pwdResult.stdout);
+        inv.progressLog.write(pwdResult.stderr);
+    } catch (e) {
+        const epe = e as ExecPromiseError;
+        await inv.progressLog.write(`pwd failed doh: ${epe.message}`);
+    }
+
+    try { // diagnostic of "./site does not exist" error
+        const lsResult = await inv.exec("ls", []);
+        inv.progressLog.write(lsResult.stdout);
+        inv.progressLog.write(lsResult.stderr);
+    } catch (e) {
+        const epe = e as ExecPromiseError;
+        await inv.progressLog.write(`ls failed doh: ${epe.message}`);
+    }
+
     let htlmproofResult: ExecPromiseError | ExecPromiseResult;
     try {
         htlmproofResult = await inv.exec("./htmlproof.sh", []);

@@ -114,7 +114,7 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
 
     inv.progressLog.write("Running in " + inv.project.baseDir);
     if (inv.project.hasDirectory("site")) {
-        inv.progressLog.write("There is site dir, good");
+        inv.progressLog.write("There is a site dir, good");
     } else {
         inv.progressLog.write("There is not a site dir, BAD");
         return {

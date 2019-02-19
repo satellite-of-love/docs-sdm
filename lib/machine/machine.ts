@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { logger } from "@atomist/automation-client";
 import {
     allOf,
     Autofix,
@@ -65,6 +66,8 @@ export function machine(
     configuration: SoftwareDeliveryMachineConfiguration,
 ): SoftwareDeliveryMachine {
 
+    logger.info("The configured log level is: " + configuration.logging.level);
+
     const sdm = createSoftwareDeliveryMachine({
         name: "Atomist Documentation Software Delivery Machine",
         configuration,
@@ -108,9 +111,9 @@ export function machine(
 
     sdm.withPushRules(
         whenPushSatisfies(allOf(IsMkdocsProject, not(isMaterialChange({
-            extensions: [".md", ".html"],
+            extensions: ["md", "html"],
             files: ["mkdocs.yml"],
-        }))))
+        })))).itMeans("Nothing about the markdown changed")
             .setGoals(ImmaterialGoals.andLock()),
         whenPushSatisfies(IsMkdocsProject)
             .setGoals(mkDocsGoals),

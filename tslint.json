@@ -10,7 +10,10 @@
       "ban-single-arg-parens"
     ],
     "strict-boolean-expressions": [
-      true
+      true,
+      "allow-null-union",
+      "allow-string",
+      "allow-number"
     ],
     "await-promise": true,
     "cyclomatic-complexity": true,

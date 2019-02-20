@@ -41,7 +41,7 @@ export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
     events: [GoalProjectListenerEvent.before],
     listener: async (project, goalInvocation, event) => {
         if (!await project.hasDirectory("site")) {
-            const siteRoot = project.getFile("site/index.html");
+            const siteRoot = await project.getFile("site/index.html");
             if (siteRoot) {
                 return { code: 0, message: "Looks OK, site directory already exists in " + project.baseDir };
             } else {
@@ -96,8 +96,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-                  args: string | string[] = [],
-                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+        args: string | string[] = [],
+        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -113,7 +113,7 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
     const errors: string[] = []; // TODO: can eliminate because we are only doing one thing now
 
     inv.progressLog.write("Running in " + inv.project.baseDir);
-    if (inv.project.hasDirectory("site")) { // goal: this is a lint error, because it's always truthyt
+    if (await inv.project.hasDirectory("site")) {
         inv.progressLog.write("There is a site dir, good");
     } else {
         inv.progressLog.write("There is not a site dir, BAD");

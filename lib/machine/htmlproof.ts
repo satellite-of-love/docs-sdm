@@ -96,8 +96,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-                  args: string | string[] = [],
-                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+        args: string | string[] = [],
+        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -130,7 +130,7 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
         inv.progressLog.write(pwdResult.stderr);
     } catch (e) {
         const epe = e as ExecPromiseError;
-        await inv.progressLog.write(`pwd failed doh: ${epe.message}`);
+        inv.progressLog.write(`pwd failed doh: ${epe.message}`);
     }
 
     try { // diagnostic of "./site does not exist" error
@@ -139,7 +139,7 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
         inv.progressLog.write(lsResult.stderr);
     } catch (e) {
         const epe = e as ExecPromiseError;
-        await inv.progressLog.write(`ls failed doh: ${epe.message}`);
+        inv.progressLog.write(`ls failed doh: ${epe.message}`);
     }
 
     let htlmproofResult: ExecPromiseError | ExecPromiseResult;

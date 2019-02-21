@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as fs from "fs-extra";
 import {
+    GitProject,
     HandlerContext,
     logger,
     Project,
     RepoRef,
-    GitProject,
 } from "@atomist/automation-client";
 import { doWithFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import {
@@ -33,9 +32,10 @@ import {
     SlackMessage,
 } from "@atomist/slack-messages";
 import { Credentials, S3 } from "aws-sdk";
+import * as fs from "fs-extra";
 import * as mime from "mime-types";
-import { promisify } from "util";
 import * as path from "path";
+import { promisify } from "util";
 
 function putObject(s3: S3, params: S3.Types.PutObjectRequest): () => Promise<S3.Types.PutObjectOutput> {
     return promisify<S3.Types.PutObjectOutput>(cb => s3.putObject(params, cb));
@@ -56,7 +56,7 @@ export async function doIt(inv: ProjectAwareGoalInvocation): Promise<ExecuteGoal
             bucketName: "docs-sdm.atomist.com",
             region: "us-west-2",
             globPattern: "site/**/*",
-            pathTranslation: path => inv.id.sha + "/" + path.replace("site/", ""),
+            pathTranslation: filepath => inv.id.sha + "/" + filepath.replace("site/", ""),
             indexPath: inv.id.sha + "/",
         });
         inv.progressLog.write("URL: " + result.url);

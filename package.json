@@ -37,6 +37,7 @@
     "@types/mime-types": "^2.1.0",
     "@types/node": "^10.5.7",
     "aws-sdk": "^2.399.0",
+    "fs-extra": "^7.0.1",
     "lodash": "^4.17.11",
     "mime-types": "^2.1.21"
   },

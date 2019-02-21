@@ -13,31 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import * as fs from "fs-extra";
 import {
-    configurationValue,
     HandlerContext,
     logger,
     Project,
     RepoRef,
+    GitProject,
 } from "@atomist/automation-client";
 import { doWithFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import {
     doWithProject,
     ExecuteGoal,
     ExecuteGoalResult,
-    ProgressLog,
     ProjectAwareGoalInvocation,
-    slackErrorMessage,
     slackWarningMessage,
 } from "@atomist/sdm";
 import {
-    Attachment,
     SlackMessage,
 } from "@atomist/slack-messages";
 import { Credentials, S3 } from "aws-sdk";
 import * as mime from "mime-types";
 import { promisify } from "util";
+import * as path from "path";
 
 function putObject(s3: S3, params: S3.Types.PutObjectRequest): () => Promise<S3.Types.PutObjectOutput> {
     return promisify<S3.Types.PutObjectOutput>(cb => s3.putObject(params, cb));
@@ -97,13 +95,16 @@ async function pushToS3(s3: S3, project: Project, params: {
     let fileCount = 0;
     await doWithFiles(project, globPattern, async file => {
         fileCount++;
-        const content = await file.getContent();
         const key = pathTranslation(file.path);
+
         const contentType = mime.lookup(file.path);
         if (contentType === false) {
             warnings.push("Not uploading: Unable to determine content type for " + file.path);
             return;
         }
+
+        const content = await fs.readFile((project as GitProject).baseDir +
+            path.sep + file.path); // replace with file.getContentBuffer when that makes it into automation-client
 
         logger.info(`File: ${file.path}, key, ${key}, contentType: ${contentType}`);
         await putObject(s3, {

@@ -96,8 +96,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-                  args: string | string[] = [],
-                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+        args: string | string[] = [],
+        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -112,34 +112,23 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
 
     const errors: string[] = []; // TODO: can eliminate because we are only doing one thing now
 
+    // diagnostics. Where can we cache? 
     inv.progressLog.write("Running in " + inv.project.baseDir);
-    if (await inv.project.hasDirectory("site")) {
-        inv.progressLog.write("There is a site dir, good");
-    } else {
-        inv.progressLog.write("There is not a site dir, BAD");
-        return {
-            code: 10,
-            message:
-                "Site dir not found. This should have been created by MkdocsBuildAfterCheckout GoalProjectListener.",
-        };
-    }
-
-    try { // diagnostic of "./site does not exist" error
-        const pwdResult = await inv.exec("pwd", []);
+    try {
+        const pwdResult = await inv.exec("ls", ["/opt/data"]);
         inv.progressLog.write(pwdResult.stdout);
         inv.progressLog.write(pwdResult.stderr);
     } catch (e) {
         const epe = e as ExecPromiseError;
-        inv.progressLog.write(`pwd failed doh: ${epe.message}`);
+        inv.progressLog.write(`ls failed on /opt/data: ${epe.message}`);
     }
-
-    try { // diagnostic of "./site does not exist" error
-        const lsResult = await inv.exec("ls", []);
+    try {
+        const lsResult = await inv.exec("ls", [process.env.HOME]);
         inv.progressLog.write(lsResult.stdout);
         inv.progressLog.write(lsResult.stderr);
     } catch (e) {
         const epe = e as ExecPromiseError;
-        inv.progressLog.write(`ls failed doh: ${epe.message}`);
+        inv.progressLog.write(`ls failed on ~: ${epe.message}`);
     }
 
     let htlmproofResult: ExecPromiseError | ExecPromiseResult;

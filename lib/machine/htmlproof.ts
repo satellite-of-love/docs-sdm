@@ -96,8 +96,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-        args: string | string[] = [],
-        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+                  args: string | string[] = [],
+                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -112,7 +112,7 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
 
     const errors: string[] = []; // TODO: can eliminate because we are only doing one thing now
 
-    // diagnostics. Where can we cache? 
+    // diagnostics. Where can we cache?
     inv.progressLog.write("Running in " + inv.project.baseDir);
     try {
         const pwdResult = await inv.exec("ls", ["/opt/data"]);

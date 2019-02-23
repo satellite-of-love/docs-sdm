@@ -101,7 +101,7 @@
           {
             "name": "data",
             "hostPath": {
-              "path": "/mnt/disks/ssd0/data/atomist-sdm",
+              "path": "/mnt/disks/ssd0/data/docs-sdm",
               "type": "DirectoryOrCreate"
             }
           }

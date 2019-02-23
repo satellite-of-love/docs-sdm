@@ -115,6 +115,7 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
     // diagnostics. Where can we cache?
     inv.progressLog.write("Running in " + inv.project.baseDir);
     try {
+        inv.progressLog.write("Running ls on /opt/data");
         const pwdResult = await inv.exec("ls", ["/opt/data"]);
         inv.progressLog.write(pwdResult.stdout);
         inv.progressLog.write(pwdResult.stderr);
@@ -123,6 +124,7 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
         inv.progressLog.write(`ls failed on /opt/data: ${epe.message}`);
     }
     try {
+        inv.progressLog.write("Running ls on [" + process.env.HOME + "]");
         const lsResult = await inv.exec("ls", [process.env.HOME]);
         inv.progressLog.write(lsResult.stdout);
         inv.progressLog.write(lsResult.stderr);

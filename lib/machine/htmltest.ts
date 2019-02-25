@@ -99,8 +99,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-        args: string | string[] = [],
-        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+                  args: string | string[] = [],
+                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,

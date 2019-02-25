@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { buttonForCommand, logger } from "@atomist/automation-client";
+import { logger } from "@atomist/automation-client";
 import {
     allOf,
     Autofix,
@@ -125,19 +125,6 @@ export function machine(
         goalState(),
         gitHubGoalStatus(),
     );
-
-    sdm.addCommand({
-        name: "TestTheButton",
-        intent: "push me",
-        listener: async cli => {
-            return cli.addressChannels({
-                text: "Push the button",
-                attachments: [{
-                    fallback: "poo", actions: [buttonForCommand({ text: "Here" }, "TestTheButton")],
-                }],
-            });
-        },
-    });
 
     return sdm;
 }

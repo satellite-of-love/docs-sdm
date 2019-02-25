@@ -58,7 +58,8 @@ RUN python3.6 get-pip.py
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-RUN curl -sL -o /usr/local/bin/htmltestDir.tar.gz https://github.com/wjdp/htmltest/releases/download/v0.10.1/htmltest_0.10.1_linux_amd64.tar.gz \
-    && tar -xvf /usr/local/bin/htmltestDir.tar.gz
+RUN curl -sL -o htmltest.tar.gz https://github.com/wjdp/htmltest/releases/download/v0.10.1/htmltest_0.10.1_linux_amd64.tar.gz \
+    && tar -xvf htmltest.tar.gz \
+    && mv htmltest /usr/local/bin
 
 COPY . .

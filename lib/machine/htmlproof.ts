@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
     GitProject,
     logger,
@@ -35,6 +34,9 @@ import {
     SpawnLogResult,
 } from "@atomist/sdm";
 import { SpawnSyncOptions } from "child_process";
+import * as fs from "fs-extra";
+import _ = require("lodash");
+import * as path from "path";
 
 export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
     name: "mkdocs build",
@@ -133,9 +135,11 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
         inv.progressLog.write(`ls failed on ~: ${epe.message}`);
     }
 
+    const cachingArguments = await findCacheArguments(inv);
+
     let htlmproofResult: ExecPromiseError | ExecPromiseResult;
     try {
-        htlmproofResult = await inv.exec("./htmlproof.sh", []);
+        htlmproofResult = await inv.exec("./htmlproof.sh", cachingArguments);
     } catch (e) {
         const epe = e as ExecPromiseError;
         await inv.addressChannels(`htmlproofer failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
@@ -147,3 +151,15 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
 
     return { code: errors.length };
 }, { readOnly: true });
+
+async function findCacheArguments(inv: ProjectAwareGoalInvocation): Promise<string[]> {
+    const configuredCacheDir = _.get(inv, "configuration.sdm.cache.path");
+    if (!configuredCacheDir) {
+        inv.progressLog.write("No cache directory configured");
+        return [];
+    }
+    const htmlProofCacheDir = configuredCacheDir + path.sep + "htmlproofer";
+    await fs.ensureDir(htmlProofCacheDir);
+    inv.progressLog.write("Caching htmlproofer results in: " + htmlProofCacheDir);
+    return ["--storage-dir", htmlProofCacheDir];
+}

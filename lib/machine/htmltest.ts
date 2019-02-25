@@ -114,11 +114,11 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
 
     const errors: string[] = []; // TODO: can eliminate because we are only doing one thing now
 
-    const cachingArguments = await findCacheArguments(inv);
+    await setUpCacheDirectory(inv);
 
     let htlmproofResult: ExecPromiseError | ExecPromiseResult;
     try {
-        htlmproofResult = await inv.exec("htmltest", ["site"]);
+        htlmproofResult = await inv.exec("htmltest", []);
     } catch (e) {
         const epe = e as ExecPromiseError;
         await inv.addressChannels(`htmltest failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
@@ -131,14 +131,14 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
     return { code: errors.length };
 }, { readOnly: true });
 
-async function findCacheArguments(inv: ProjectAwareGoalInvocation): Promise<string[]> {
+async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<string[]> {
     const configuredCacheDir = _.get(inv, "configuration.sdm.cache.path");
     if (!configuredCacheDir) {
         inv.progressLog.write("No cache directory configured");
-        return [];
+        return;
     }
-    const htmlProofCacheDir = configuredCacheDir + path.sep + "htmlproofer";
-    await fs.ensureDir(htmlProofCacheDir);
-    inv.progressLog.write("Caching htmlproofer results in: " + htmlProofCacheDir);
-    return ["--storage-dir", htmlProofCacheDir];
+    const htmltestCacheDir = configuredCacheDir + path.sep + "htmltest";
+    await fs.ensureDir(htmltestCacheDir);
+    inv.progressLog.write("Caching htmltest results in: " + htmltestCacheDir);
+    // TODO: ln -s htmltestCacheDir Project.baseDir/tmp
 }

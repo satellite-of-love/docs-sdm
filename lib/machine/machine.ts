@@ -51,7 +51,7 @@ import {
 import {
     executeHtmlproof,
     MkdocsBuildAfterCheckout,
-} from "./htmlproof";
+} from "./htmltest";
 import {
     listTodoCodeInspectionRegistration,
 } from "./listTodoCommand";
@@ -91,8 +91,8 @@ export function machine(
         { displayName: "mkdocs strict" },
         executeMkdocsStrict);
 
-    const htmlproof = goal(
-        { displayName: "htmlproof" },
+    const htmltest = goal(
+        { displayName: "htmltest" },
         executeHtmlproof,
         { logInterpreter: lastLinesLogInterpreter("bummer", 10) })
         .withProjectListener(MkdocsBuildAfterCheckout);
@@ -107,7 +107,7 @@ export function machine(
         .plan(build).after(autofix)
         .plan(strictMkdocsBuild).after(build)
         .plan(publish).after(build)
-        .plan(htmlproof).after(publish);
+        .plan(htmltest).after(publish);
 
     sdm.withPushRules(
         whenPushSatisfies(allOf(IsMkdocsProject, not(isMaterialChange({

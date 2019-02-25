@@ -42,7 +42,8 @@
     "mime-types": "^2.1.21"
   },
   "devDependencies": {
-    "@atomist/sdm-local": "^1.0.4",
+    "@atomist/sdm-local": "^1.0.5-nortissej.ignoreFingerprints.20190225225639",
+    "@jessitron/tslint": "5.12.2",
     "@types/mocha": "^5.2.5",
     "@types/power-assert": "^1.5.0",
     "espower-typescript": "^9.0.0",
@@ -52,7 +53,6 @@
     "rimraf": "^2.6.2",
     "supervisor": "^0.12.0",
     "ts-node": "^7.0.0",
-    "@jessitron/tslint": "5.12.2",
     "typedoc": "^0.13.0",
     "typescript": "^3.1.6"
   },

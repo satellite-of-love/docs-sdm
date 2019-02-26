@@ -132,7 +132,7 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
     return { code: errors.length };
 }, { readOnly: true });
 
-async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<string[]> {
+async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<void> {
     const configuredCacheDir = _.get(inv, "configuration.sdm.cache.path");
     if (!configuredCacheDir) {
         inv.progressLog.write("No cache directory configured");

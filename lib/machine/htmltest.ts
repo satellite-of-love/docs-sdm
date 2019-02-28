@@ -38,6 +38,7 @@ import { SpawnSyncOptions } from "child_process";
 import * as fs from "fs-extra";
 import _ = require("lodash");
 import * as path from "path";
+import { promisify } from "util";
 
 export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
     name: "mkdocs build",
@@ -99,8 +100,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-                  args: string | string[] = [],
-                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+        args: string | string[] = [],
+        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -140,6 +141,16 @@ async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<voi
     }
     const htmltestCacheDir = configuredCacheDir + path.sep + "htmltest";
     await fs.ensureDir(htmltestCacheDir);
+
+    const htmltestLooksForCacheIn = inv.project.baseDir + path.sep + "tmp";
+    if (await promisify(fs.exists)(htmltestLooksForCacheIn)) {
+        inv.progressLog.write("tmp already exists in project directory; not linking to cache");
+        return;
+    }
+
     inv.progressLog.write("Caching htmltest results in: " + htmltestCacheDir);
+    await promisify(c =>
+        fs.symlink(htmltestCacheDir, htmltestLooksForCacheIn, "dir",
+            (err) => c(err, undefined)))();
     // TODO: ln -s htmltestCacheDir Project.baseDir/tmp
 }

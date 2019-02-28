@@ -31,6 +31,7 @@
     "@atomist/sdm-core": "^1.2.0",
     "@atomist/sdm-pack-build": "^1.0.3",
     "@atomist/sdm-pack-markdown": "^0.1.2",
+    "@atomist/sdm-pack-s3": "0.1.0-master.20190228224538",
     "@atomist/slack-messages": "^1.1.0",
     "@atomist/tree-path": "^1.0.2",
     "@types/lodash": "^4.14.118",

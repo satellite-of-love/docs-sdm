@@ -36,6 +36,7 @@ import {
     goalState,
 } from "@atomist/sdm-core";
 import { Build } from "@atomist/sdm-pack-build";
+import { PublishToS3 } from "@atomist/sdm-pack-s3";
 import { executePublishToS3 } from "../publish/publishToS3";
 import {
     mkdocsBuilderRegistration,
@@ -97,10 +98,14 @@ export function machine(
         { logInterpreter: lastLinesLogInterpreter("bummer", 10) })
         .withProjectListener(MkdocsBuildAfterCheckout);
 
-    const publish = goal({ displayName: "publishToS3" },
-        executePublishToS3,
-        { logInterpreter: lastLinesLogInterpreter("no S3 for you", 10) })
-        .withProjectListener(MkdocsBuildAfterCheckout);
+    const publish = new PublishToS3({
+        uniqueName: "publish draft to s3",
+        bucketName: "docs-sdm.atomist.com",
+        region: "us-west-2",
+        filesToPublish: ["site/**/*"],
+        pathTranslation: (filepath, inv) => inv.id.sha + "/" + filepath.replace("site/", ""),
+        pathToIndex: "site/index.html",
+    });
 
     const mkDocsGoals = goals("mkdocs")
         .plan(autofix, fingerprint)

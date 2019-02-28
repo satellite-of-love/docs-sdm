@@ -111,8 +111,9 @@ export function machine(
 
     sdm.withPushRules(
         whenPushSatisfies(allOf(IsMkdocsProject, not(isMaterialChange({
-            extensions: ["md", "html"],
+            extensions: ["html", "js"],
             files: ["mkdocs.yml"],
+            globs: ["docs/**/*"],
         })))).itMeans("Nothing about the markdown changed")
             .setGoals(ImmaterialGoals.andLock()),
         whenPushSatisfies(IsMkdocsProject)

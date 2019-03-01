@@ -15,12 +15,12 @@
  */
 
 import { configureLogzio } from "@atomist/automation-client-ext-logzio";
+import { CacheConfiguration, SoftwareDeliveryMachineConfiguration } from "@atomist/sdm";
 import {
     ConfigureOptions,
     configureSdm,
 } from "@atomist/sdm-core";
 import { machine } from "./lib/machine/machine";
-import { SoftwareDeliveryMachineConfiguration, CacheConfiguration } from "@atomist/sdm";
 
 const machineOptions: ConfigureOptions = {
     requiredConfigurationValues: [
@@ -37,6 +37,6 @@ export const configuration: SoftwareDeliveryMachineConfiguration<CacheConfigurat
         cache: {
             enabled: true,
             path: "/opt/data",
-        }
-    }
+        },
+    },
 };

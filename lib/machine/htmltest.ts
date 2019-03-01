@@ -20,6 +20,7 @@ import {
     toStringArray,
 } from "@atomist/automation-client";
 import {
+    CacheConfiguration,
     doWithProject,
     execPromise,
     ExecPromiseError,
@@ -33,7 +34,6 @@ import {
     spawnLog,
     SpawnLogOptions,
     SpawnLogResult,
-    CacheConfiguration,
 } from "@atomist/sdm";
 import { SpawnSyncOptions } from "child_process";
 import * as fs from "fs-extra";
@@ -101,8 +101,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-        args: string | string[] = [],
-        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+                  args: string | string[] = [],
+                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -135,7 +135,7 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
 }, { readOnly: true });
 
 async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<void> {
-    const cacheConfig: CacheConfiguration["cache"] = inv.configuration.sdm.cache || {}
+    const cacheConfig: CacheConfiguration["cache"] = inv.configuration.sdm.cache || {};
     if (!cacheConfig.enabled) {
         inv.progressLog.write("INFO: cache not enabled. No big deal.");
         return;

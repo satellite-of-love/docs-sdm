@@ -90,7 +90,7 @@ export function machine(
         .with(mkdocsBuilderRegistration());
 
     const strictMkdocsBuild = goal(
-        { displayName: "mkdocs strict", },
+        { displayName: "mkdocs strict" },
         executeMkdocsStrict);
 
     const htmltest = goal(
@@ -117,8 +117,8 @@ export function machine(
 
     const officialPublish = goals("Release site")
         .plan(goal({ uniqueName: "publish for realz", preApproval: true },
-            async (inv) => { inv.addressChannels("Pretend I just published this") }
-        )).after(strictMkdocsBuild, publish, htmltest)
+            async inv => { return inv.addressChannels("Pretend I just published this"); },
+        )).after(strictMkdocsBuild, publish, htmltest);
 
     sdm.withPushRules(
         whenPushSatisfies(allOf(IsMkdocsProject, not(isMaterialChange({

@@ -143,7 +143,7 @@ async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<voi
     await fs.ensureDir(htmltestCacheDir);
 
     const htmltestLooksForCacheIn = inv.project.baseDir + path.sep + "tmp";
-    if (await promisify(fs.exists)(htmltestLooksForCacheIn)) {
+    if (await inv.project.hasDirectory("tmp")) {
         inv.progressLog.write("tmp already exists in project directory; not linking to cache");
         return;
     }
@@ -151,6 +151,5 @@ async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<voi
     inv.progressLog.write("Caching htmltest results in: " + htmltestCacheDir);
     await promisify(c =>
         fs.symlink(htmltestCacheDir, htmltestLooksForCacheIn, "dir",
-            (err) => c(err, undefined)))();
-    // TODO: ln -s htmltestCacheDir Project.baseDir/tmp
+            err => c(err, undefined)))();
 }

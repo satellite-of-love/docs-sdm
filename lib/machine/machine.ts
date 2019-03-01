@@ -117,7 +117,7 @@ export function machine(
 
     const officialPublish = goals("Release site")
         .plan(goal({ uniqueName: "publish for realz", preApproval: true },
-            async inv => { return inv.addressChannels("Pretend I just published this"); },
+            async inv => inv.addressChannels("Pretend I just published this"),
         )).after(strictMkdocsBuild, publish, htmltest);
 
     sdm.withPushRules(

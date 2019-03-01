@@ -33,6 +33,7 @@ import {
     spawnLog,
     SpawnLogOptions,
     SpawnLogResult,
+    CacheConfiguration,
 } from "@atomist/sdm";
 import { SpawnSyncOptions } from "child_process";
 import * as fs from "fs-extra";
@@ -100,8 +101,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-                  args: string | string[] = [],
-                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+        args: string | string[] = [],
+        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -134,9 +135,14 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
 }, { readOnly: true });
 
 async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<void> {
-    const configuredCacheDir = _.get(inv, "configuration.sdm.cache.path");
+    const cacheConfig: CacheConfiguration["cache"] = inv.configuration.sdm.cache || {}
+    if (!cacheConfig.enabled) {
+        inv.progressLog.write("INFO: cache not enabled. No big deal.");
+        return;
+    }
+    const configuredCacheDir = cacheConfig.path || "/opt/data";
     if (!configuredCacheDir) {
-        inv.progressLog.write("No cache directory configured");
+        inv.progressLog.write("INFO: no cache directory configured. No big deal.");
         return;
     }
     const htmltestCacheDir = configuredCacheDir + path.sep + "htmltest";

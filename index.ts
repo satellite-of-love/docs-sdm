@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { Configuration } from "@atomist/automation-client";
 import { configureLogzio } from "@atomist/automation-client-ext-logzio";
 import {
     ConfigureOptions,
     configureSdm,
 } from "@atomist/sdm-core";
 import { machine } from "./lib/machine/machine";
+import { SoftwareDeliveryMachineConfiguration, CacheConfiguration } from "@atomist/sdm";
 
 const machineOptions: ConfigureOptions = {
     requiredConfigurationValues: [
@@ -28,9 +28,15 @@ const machineOptions: ConfigureOptions = {
 };
 
 // Main configuration entry point for this SDM
-export const configuration: Configuration = {
+export const configuration: SoftwareDeliveryMachineConfiguration<CacheConfiguration> = {
     postProcessors: [
         configureLogzio,
         configureSdm(machine, machineOptions),
     ],
+    sdm: {
+        cache: {
+            enabled: true,
+            path: "/opt/data",
+        }
+    }
 };

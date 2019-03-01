@@ -15,7 +15,10 @@
  */
 
 import { configureLogzio } from "@atomist/automation-client-ext-logzio";
-import { CacheConfiguration, SoftwareDeliveryMachineConfiguration } from "@atomist/sdm";
+import {
+    CacheConfiguration,
+    SoftwareDeliveryMachineConfiguration,
+} from "@atomist/sdm";
 import {
     ConfigureOptions,
     configureSdm,

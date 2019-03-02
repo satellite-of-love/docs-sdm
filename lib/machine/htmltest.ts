@@ -33,12 +33,14 @@ import {
     spawnLog,
     SpawnLogOptions,
     SpawnLogResult,
+    InterpretLog,
 } from "@atomist/sdm";
 import { SpawnSyncOptions } from "child_process";
 import * as fs from "fs-extra";
 import _ = require("lodash");
 import * as path from "path";
 import { promisify } from "util";
+import { microgrammar } from "@atomist/microgrammar";
 
 export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
     name: "mkdocs build",
@@ -157,4 +159,17 @@ async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<voi
     await promisify(c =>
         fs.symlink(htmltestCacheDir, htmltestLooksForCacheIn, "dir",
             err => c(err, undefined)))();
+}
+
+export const htmltestLogInterpreter: InterpretLog = (log) => {
+
+    const betweenEquals = microgrammar<{ stuff: string }>({ phrase: "===== ${stuff} ======" })
+    const match = betweenEquals.firstMatch(log);
+    const relevantPart = match ? match.stuff : log
+    const lastLine = log.trim().split("\n").reverse().shift();
+
+    return {
+        relevantPart,
+        message: "htmltest: " + lastLine
+    }
 }

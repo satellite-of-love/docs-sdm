@@ -53,6 +53,7 @@ import {
 import {
     executeHtmlproof,
     MkdocsBuildAfterCheckout,
+    htmltestLogInterpreter,
 } from "./htmltest";
 import {
     listTodoCodeInspectionRegistration,
@@ -96,7 +97,7 @@ export function machine(
     const htmltest = goal(
         { displayName: "htmltest" },
         executeHtmlproof,
-        { logInterpreter: lastLinesLogInterpreter("bummer", 10) })
+        { logInterpreter: htmltestLogInterpreter })
         .withProjectListener(MkdocsBuildAfterCheckout);
 
     const publish = new PublishToS3({

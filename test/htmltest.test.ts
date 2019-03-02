@@ -32,7 +32,7 @@ user/dashboard/index.html
     assert.strictEqual(result.message, "htmltest: 1 errors in 65 documents");
     assert.strictEqual(result.relevantPart,
       `user/dashboard/index.html
-  request exceeded our ExternalTimeout --- user / dashboard / index.html --> https://app.atomist.como
+  request exceeded our ExternalTimeout --- user/dashboard/index.html --> https://app.atomist.como
 `);
   });
 });

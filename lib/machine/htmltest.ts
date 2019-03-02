@@ -102,8 +102,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-                  args: string | string[] = [],
-                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+        args: string | string[] = [],
+        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -163,9 +163,14 @@ async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<voi
 
 export const htmltestLogInterpreter: InterpretLog = (log) => {
 
-    const betweenEquals = microgrammar<{ stuff: string }>({ phrase: "===== ${stuff} ======" })
+    const betweenEquals = microgrammar({
+        phrase: "${equals} ${stuff} ${moreEquals}", terms: {
+            equals: /=====+/,
+            moreEquals: /=====+/,
+        }
+    })
     const match = betweenEquals.firstMatch(log);
-    const relevantPart = match ? match.stuff : log
+    const relevantPart = match ? (match as any).stuff : log
     const lastLine = log.trim().split("\n").reverse().shift();
 
     return {

@@ -25,10 +25,10 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "dependencies": {
-    "@atomist/automation-client": "^1.2.0",
+    "@atomist/automation-client": "^1.3.0-master.20190228133619",
     "@atomist/automation-client-ext-logzio": "^1.0.1",
-    "@atomist/sdm": "^1.2.0",
-    "@atomist/sdm-core": "^1.2.0",
+    "@atomist/sdm": "^1.3.0-master.20190301193744",
+    "@atomist/sdm-core": "^1.3.0-master.20190301203019",
     "@atomist/sdm-pack-build": "^1.0.3",
     "@atomist/sdm-pack-markdown": "^0.1.2",
     "@atomist/sdm-pack-s3": "0.1.0-master.20190228224538",
@@ -43,7 +43,7 @@
     "mime-types": "^2.1.21"
   },
   "devDependencies": {
-    "@atomist/sdm-local": "^1.0.5-nortissej.ignoreFingerprints.20190225225639",
+    "@atomist/sdm-local": "^1.0.5-master.20190301000954",
     "@jessitron/tslint": "5.12.2",
     "@types/mocha": "^5.2.5",
     "@types/power-assert": "^1.5.0",

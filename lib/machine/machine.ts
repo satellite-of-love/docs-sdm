@@ -52,8 +52,8 @@ import {
 } from "./emptySectionsContainTbd";
 import {
     executeHtmlproof,
-    MkdocsBuildAfterCheckout,
     htmltestLogInterpreter,
+    MkdocsBuildAfterCheckout,
 } from "./htmltest";
 import {
     listTodoCodeInspectionRegistration,

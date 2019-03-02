@@ -29,11 +29,11 @@ import {
     GoalInvocation,
     GoalProjectListenerEvent,
     GoalProjectListenerRegistration,
+    InterpretLog,
     ProjectAwareGoalInvocation,
     spawnLog,
     SpawnLogOptions,
     SpawnLogResult,
-    InterpretLog,
 } from "@atomist/sdm";
 import { SpawnSyncOptions } from "child_process";
 import * as fs from "fs-extra";

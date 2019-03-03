@@ -19,6 +19,7 @@ import {
     logger,
     toStringArray,
 } from "@atomist/automation-client";
+import { microgrammar } from "@atomist/microgrammar";
 import {
     CacheConfiguration,
     doWithProject,
@@ -40,7 +41,6 @@ import * as fs from "fs-extra";
 import _ = require("lodash");
 import * as path from "path";
 import { promisify } from "util";
-import { microgrammar } from "@atomist/microgrammar";
 
 export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
     name: "mkdocs build",
@@ -161,20 +161,20 @@ async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<voi
             err => c(err, undefined)))();
 }
 
-export const htmltestLogInterpreter: InterpretLog = (log) => {
+export const htmltestLogInterpreter: InterpretLog = log => {
 
     const betweenEquals = microgrammar({
         phrase: "${equals} ${stuff} ${moreEquals}", terms: {
             equals: /=====+/,
             moreEquals: /=====+/,
-        }
-    })
+        },
+    });
     const match = betweenEquals.firstMatch(log);
-    const relevantPart = match ? (match as any).stuff : log
+    const relevantPart = match ? (match as any).stuff : log;
     const lastLine = log.trim().split("\n").reverse().shift();
 
     return {
         relevantPart,
-        message: "htmltest: " + lastLine
-    }
-}
+        message: "htmltest: " + lastLine,
+    };
+};

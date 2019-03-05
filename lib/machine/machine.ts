@@ -116,10 +116,18 @@ export function machine(
         .plan(publish).after(build)
         .plan(htmltest).after(publish);
 
+    const reallyPublishGoal = new PublishToS3({
+        uniqueName: "publish site to s3",
+        preApprovalRequired: true,
+        bucketName: "docs.atomist.com",
+        region: "us-west-2",
+        filesToPublish: ["site/**/*"],
+        pathTranslation: filepath => filepath.replace("site/", ""),
+        pathToIndex: "site/index.html",
+    });
+
     const officialPublish = goals("Release site")
-        .plan(goal({ uniqueName: "publish for realz", preApproval: true },
-            async inv => inv.addressChannels("Pretend I just published this"),
-        )).after(strictMkdocsBuild, publish, htmltest);
+        .plan(reallyPublishGoal).after(strictMkdocsBuild, publish, htmltest);
 
     sdm.withPushRules(
         whenPushSatisfies(allOf(IsMkdocsProject, not(isMaterialChange({

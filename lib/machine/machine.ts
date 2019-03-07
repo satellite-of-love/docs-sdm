@@ -107,7 +107,7 @@ export function machine(
         filesToPublish: ["site/**/*"],
         pathTranslation: (filepath, inv) => inv.id.sha + "/" + filepath.replace("site/", ""),
         pathToIndex: "site/index.html",
-    });
+    }).withProjectListener(MkdocsBuildAfterCheckout);
 
     const mkDocsGoals = goals("mkdocs")
         .plan(autofix, fingerprint)
@@ -124,7 +124,7 @@ export function machine(
         filesToPublish: ["site/**/*"],
         pathTranslation: filepath => filepath.replace("site/", ""),
         pathToIndex: "site/index.html",
-    });
+    }).withProjectListener(MkdocsBuildAfterCheckout);
 
     const officialPublish = goals("Release site")
         .plan(reallyPublishGoal).after(strictMkdocsBuild, publish, htmltest);

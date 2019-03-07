@@ -120,7 +120,7 @@ export function machine(
         uniqueName: "publish site to s3",
         preApprovalRequired: true,
         bucketName: "docs.atomist.com",
-        region: "us-west-2",
+        region: "us-east-1",
         filesToPublish: ["site/**/*"],
         pathTranslation: filepath => filepath.replace("site/", ""),
         pathToIndex: "site/index.html",

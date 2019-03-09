@@ -38,6 +38,7 @@ import {
 } from "@atomist/sdm-core";
 import { Build } from "@atomist/sdm-pack-build";
 import { PublishToS3 } from "@atomist/sdm-pack-s3";
+import { lintAutofix } from "../markdown/lint";
 import { executePublishToS3 } from "../publish/publishToS3";
 import {
     mkdocsBuilderRegistration,
@@ -82,7 +83,8 @@ export function machine(
     sdm.addCodeInspectionCommand(listTodoCodeInspectionRegistration());
 
     const autofix = new Autofix().with(PutTbdInEmptySectionsAutofix)
-        .with(AlphabetizeGlossaryAutofix);
+        .with(AlphabetizeGlossaryAutofix)
+        .with(lintAutofix);
 
     const fingerprint = new Fingerprint().with(TbdFingerprinterRegistration)
         .withListener(tbdFingerprintListener);
@@ -132,7 +134,7 @@ export function machine(
     sdm.withPushRules(
         whenPushSatisfies(allOf(IsMkdocsProject, not(isMaterialChange({
             extensions: ["html", "js"],
-            files: ["mkdocs.yml"],
+            files: ["mkdocs.yml", ".markdownlint.json"],
             globs: ["docs/**/*"],
         })))).itMeans("Nothing about the markdown changed")
             .setGoals(ImmaterialGoals.andLock()),

@@ -9,7 +9,7 @@ const noTrailingSpaces: CodeTransform = (p: Project, inv) => {
     });
 };
 
-export const spacingAfterListMarker: CodeTransform = (p: Project) => {
+const spacingAfterListMarker: CodeTransform = (p: Project) => {
     return astUtils.doWithAllMatches(p, RemarkFileParser, "**/*.md", "//listItem", m => {
         // unordered list: one space
         const unordererListWithTooManySpaces = /^[*-]  +/;
@@ -26,7 +26,13 @@ export const spacingAfterListMarker: CodeTransform = (p: Project) => {
     });
 };
 
+const noExtraBlankLines: CodeTransform = (p: Project, inv) => {
+    return doWithFiles(p, "**/*.md", async f => {
+        return f.replace(/\n\n+/g, "\n\n");
+    });
+};
+
 export const lintAutofix: AutofixRegistration = {
     name: "markdown linting",
-    transform: [noTrailingSpaces, spacingAfterListMarker],
+    transform: [noTrailingSpaces, spacingAfterListMarker, noExtraBlankLines],
 };

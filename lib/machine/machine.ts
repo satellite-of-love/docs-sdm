@@ -17,6 +17,7 @@
 import { logger } from "@atomist/automation-client";
 import {
     allOf,
+    AutoCodeInspection,
     Autofix,
     Fingerprint,
     goal,
@@ -26,6 +27,7 @@ import {
     lastLinesLogInterpreter,
     not,
     PushTest,
+    slackReviewListenerRegistration,
     SoftwareDeliveryMachine,
     SoftwareDeliveryMachineConfiguration,
     ToDefaultBranch,
@@ -39,6 +41,7 @@ import {
 import { Build } from "@atomist/sdm-pack-build";
 import { PublishToS3 } from "@atomist/sdm-pack-s3";
 import { lintAutofix } from "../markdown/lint";
+import { inspectReferences } from "../markdown/refcheck";
 import { executePublishToS3 } from "../publish/publishToS3";
 import {
     mkdocsBuilderRegistration,
@@ -92,6 +95,10 @@ export function machine(
     const build = new Build("mkdocs build")
         .with(mkdocsBuilderRegistration());
 
+    const codeInspection = new AutoCodeInspection();
+    codeInspection.with(inspectReferences)
+        .withListener(slackReviewListenerRegistration());
+
     const strictMkdocsBuild = goal(
         { displayName: "mkdocs strict" },
         executeMkdocsStrict);
@@ -112,7 +119,7 @@ export function machine(
     }).withProjectListener(MkdocsBuildAfterCheckout);
 
     const mkDocsGoals = goals("mkdocs")
-        .plan(autofix, fingerprint)
+        .plan(autofix, fingerprint, codeInspection)
         .plan(build).after(autofix)
         .plan(strictMkdocsBuild).after(build)
         .plan(publish).after(build)

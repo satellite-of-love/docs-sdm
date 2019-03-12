@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { ProjectReview, projectUtils, ReviewComment } from "@atomist/automation-client";
+import {
+    ProjectReview,
+    projectUtils,
+    ReviewComment,
+} from "@atomist/automation-client";
 import { microgrammar } from "@atomist/microgrammar";
 import { CodeInspectionRegistration } from "@atomist/sdm";
 

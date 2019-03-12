@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-import { astUtils, logger, Project } from "@atomist/automation-client";
+import {
+    astUtils,
+    logger,
+    Project,
+} from "@atomist/automation-client";
 import { doWithFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
-import { AutofixRegistration, CodeTransform } from "@atomist/sdm";
+import {
+    AutofixRegistration,
+    CodeTransform,
+} from "@atomist/sdm";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 
 const noTrailingSpaces: CodeTransform = (p: Project, inv) => {

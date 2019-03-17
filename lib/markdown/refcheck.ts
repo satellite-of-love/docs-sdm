@@ -57,6 +57,7 @@ export const inspectReferences: CodeInspectionRegistration<ProjectReview> = {
                     sourceLocation: {
                         path: f.path,
                         offset: refmatch.$offset,
+                        lineFrom1: lineByOffset(content, refmatch.$offset),
                     },
                 });
             });
@@ -65,3 +66,16 @@ export const inspectReferences: CodeInspectionRegistration<ProjectReview> = {
         return { repoId: p.id, comments };
     },
 };
+
+function lineByOffset(content: string, offset: number): number {
+    let startingOffset = 0;
+    let lineFrom1 = 1;
+    for (const len of content.split("\n").map(l => l.length + 1)) {
+        if ((startingOffset + len) > offset) {
+            return lineFrom1;
+        }
+        startingOffset += len;
+        lineFrom1++;
+    }
+    return lineFrom1;
+}

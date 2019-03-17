@@ -35,7 +35,7 @@ const noTrailingSpaces: CodeTransform = (p: Project, inv) => {
 const spacingAfterListMarker: CodeTransform = (p: Project) => {
     return astUtils.doWithAllMatches(p, RemarkFileParser, "**/*.md", "//listItem", m => {
         // unordered list: one space
-        const unordererListWithTooManySpaces = /^[*-]  +/;
+        const unordererListWithTooManySpaces = /^ *[*-]  +/;
         if (unordererListWithTooManySpaces.test(m.$value)) {
             m.$value = m.$value.replace(unordererListWithTooManySpaces, "* ");
         }

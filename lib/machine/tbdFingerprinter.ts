@@ -67,6 +67,9 @@ export async function tbdFingerprintListener(inv: FingerprintListenerInvocation)
     }
     const last = tbdFingerprints[0];
 
+    if (last.data === "0") {
+        return;
+    }
     const message = `There are still ${last.data} TBDs to populate.`;
     return inv.addressChannels(message);
 }

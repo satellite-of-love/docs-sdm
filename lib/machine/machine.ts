@@ -42,7 +42,6 @@ import { Build } from "@atomist/sdm-pack-build";
 import { PublishToS3 } from "@atomist/sdm-pack-s3";
 import { lintAutofix } from "../markdown/lint";
 import { inspectReferences } from "../markdown/refcheck";
-import { executePublishToS3 } from "../publish/publishToS3";
 import {
     mkdocsBuilderRegistration,
 } from "./../build/mkdocsBuilder";

@@ -146,8 +146,9 @@ async function logHtmltestConfiguration(progressLog: ProgressLog, project: Proje
         progressLog.write("No configuration. File does not exist: .htmltest.yml");
         return;
     }
-    progressLog.write("Contents of .htmltest.yml:");
+    progressLog.write("----- contents of .htmltest.yml --------");
     progressLog.write(await configFile.getContent());
+    progressLog.write("----- end .htmltest.yml --------");
 }
 
 async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<void> {

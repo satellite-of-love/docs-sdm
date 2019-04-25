@@ -17,6 +17,7 @@
 import {
     GitProject,
     logger,
+    Project,
     toStringArray,
 } from "@atomist/automation-client";
 import { microgrammar } from "@atomist/microgrammar";
@@ -31,6 +32,7 @@ import {
     GoalProjectListenerEvent,
     GoalProjectListenerRegistration,
     InterpretLog,
+    ProgressLog,
     ProjectAwareGoalInvocation,
     spawnLog,
     SpawnLogOptions,
@@ -116,24 +118,37 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
 
 export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAwareGoalInvocation) => {
 
+    inv.progressLog.write("This goal checks links in the generated HTML." +
+        "It uses htmltest: https://github.com/wjdp/htmltest");
+    await logHtmltestConfiguration(inv.progressLog, inv.project);
     const errors: string[] = []; // TODO: can eliminate because we are only doing one thing now
 
     await setUpCacheDirectory(inv);
 
-    let htlmproofResult: ExecPromiseError | ExecPromiseResult;
+    let htmltestResult: ExecPromiseError | ExecPromiseResult;
     try {
-        htlmproofResult = await inv.exec("htmltest", []);
+        htmltestResult = await inv.exec("htmltest", []);
     } catch (e) {
         const epe = e as ExecPromiseError;
         await inv.addressChannels(`htmltest failed on ${inv.id.sha} on ${inv.id.branch}: ${epe.message}`);
         errors.push(epe.message);
-        htlmproofResult = epe;
+        htmltestResult = epe;
     }
-    inv.progressLog.write(htlmproofResult.stdout);
-    inv.progressLog.write(htlmproofResult.stderr);
+    inv.progressLog.write(htmltestResult.stdout);
+    inv.progressLog.write(htmltestResult.stderr);
 
     return { code: errors.length };
 }, { readOnly: true });
+
+async function logHtmltestConfiguration(progressLog: ProgressLog, project: Project): Promise<void> {
+    const configFile = await project.getFile(".htmltest.yml");
+    if (!configFile) {
+        progressLog.write("No configuration. File does not exist: .htmltest.yml");
+        return;
+    }
+    progressLog.write("Contents of .htmltest.yml:");
+    progressLog.write(await configFile.getContent());
+}
 
 async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<void> {
     const cacheConfig: CacheConfiguration["cache"] = inv.configuration.sdm.cache || {};

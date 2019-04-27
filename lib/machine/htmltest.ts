@@ -93,6 +93,9 @@ export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
  * Finds the edit_uri in mkdocs.yml, and extracts the branch name
  */
 const editUriPattern = /edit_uri: edit\/(master)\/docs/;
+function editUriForBranch(branch: string): string {
+    return `edit_uri: edit/${branch}/docs`;
+}
 
 async function changeBranchInEditUrl(goalInvocation: GoalInvocation, project: Project): Promise<void> {
     logger.info("The goal thinks it is on branch: " + goalInvocation.sdmGoal.branch);
@@ -117,7 +120,7 @@ async function changeBranchInEditUrl(goalInvocation: GoalInvocation, project: Pr
     }
     goalInvocation.progressLog.write("Updating edit_uri in mkdocs.yml to point to branch: " +
         currentBranch);
-    const newContent = mkdocsYml.replace(editUriPattern, currentBranch);
+    const newContent = mkdocsYml.replace(editUriPattern, editUriForBranch(currentBranch));
     await mkdocsYmlFile.setContent(newContent);
     return;
 }
@@ -173,7 +176,10 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
     inv.progressLog.write(htmltestResult.stderr);
 
     return { code: errors.length };
-}, { readOnly: true });
+}, {
+        // on a branch other than the default, it changes mkdocs.yml to update the editUri.
+        readOnly: false,
+    });
 
 async function logHtmltestConfiguration(progressLog: ProgressLog, project: Project): Promise<void> {
     const configFile = await project.getFile(".htmltest.yml");
@@ -192,13 +198,18 @@ async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<voi
         inv.progressLog.write("INFO: cache not enabled. No big deal.");
         return;
     }
-    const configuredCacheDir = cacheConfig.path || "/opt/data";
+    const configuredCacheDir = cacheConfig.path;
     if (!configuredCacheDir) {
         inv.progressLog.write("INFO: no cache directory configured. No big deal.");
         return;
     }
     const htmltestCacheDir = configuredCacheDir + path.sep + "htmltest";
-    await fs.ensureDir(htmltestCacheDir);
+    try {
+        await fs.ensureDir(htmltestCacheDir);
+    } catch (e) {
+        inv.progressLog.write("Unable to create cache directory. Not using it. Error: " + e.message);
+        return;
+    }
 
     const htmltestLooksForCacheIn = inv.project.baseDir + path.sep + "tmp";
     if (await inv.project.hasDirectory("tmp")) {

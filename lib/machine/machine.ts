@@ -24,7 +24,6 @@ import {
     goals,
     ImmaterialGoals,
     isMaterialChange,
-    lastLinesLogInterpreter,
     not,
     PushTest,
     slackReviewListenerRegistration,
@@ -103,7 +102,10 @@ export function machine(
         executeMkdocsStrict);
 
     const htmltest = goal(
-        { displayName: "htmltest" },
+        {
+            displayName: "htmltest",
+            uniqueName: "customHtmltestGoal",
+        },
         executeHtmlproof,
         { logInterpreter: htmltestLogInterpreter })
         .withProjectListener(MkdocsBuildAfterCheckout);

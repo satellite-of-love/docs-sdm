@@ -59,8 +59,7 @@ export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
 
         const inv: ProjectAwareGoalInvocation = toProjectAwareGoalInvocation(project, goalInvocation);
 
-        logger.info("I AM THE MkdocsBuildAfterCheckout GoalProjectListener and I got event "
-            + event + " for goal " + inv.goal.name);
+        logger.info("The MkdocsBuildAfterCheckout GoalProjectListener builds the docs with mkdocs.");
         {
             const pipResult = await inv.spawn("pip", ["install", "-r", "requirements.txt"]);
             if (pipResult.code !== 0) {
@@ -69,6 +68,9 @@ export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
                 return { code: pipResult.status || 2, message };
             }
         }
+
+        await changeBranchInEditUrl(goalInvocation, project);
+        // should I change it back after the build? Either could surprise people
 
         const errors: string[] = [];
         let mkdocsResult: ExecPromiseError | ExecPromiseResult;
@@ -86,6 +88,42 @@ export const MkdocsBuildAfterCheckout: GoalProjectListenerRegistration = {
         return { code: errors.length };
     },
 };
+
+/**
+ * Finds the edit_uri in mkdocs.yml, and extracts the branch name
+ */
+const editUriPattern = /edit_uri: edit\/(master)\/docs/;
+function editUriForBranch(branch: string): string {
+    return `edit_uri: edit/${branch}/docs`;
+}
+
+async function changeBranchInEditUrl(goalInvocation: GoalInvocation, project: Project): Promise<void> {
+    logger.info("The goal thinks it is on branch: " + goalInvocation.sdmGoal.branch);
+    logger.info("The project thinks it is on branch: " + project.id.branch);
+
+    // we should never be here if this file doesn't exist
+    const mkdocsYmlFile = await project.findFile("mkdocs.yml");
+    const mkdocsYml: string = await mkdocsYmlFile.getContent();
+    const editUriMatch = mkdocsYml.match(editUriPattern);
+    if (!editUriMatch) {
+        goalInvocation.progressLog.write(
+            "No edit_uri defined in mkdocs.yml, so I won't update it based on the current branch");
+        return;
+    }
+    const defaultBranch = editUriMatch[1];
+    logger.info("The edit_uri has branch: " + defaultBranch);
+    const currentBranch = goalInvocation.sdmGoal.branch;
+    if (currentBranch === defaultBranch) {
+        goalInvocation.progressLog.write(
+            "The edit_uri in mkdocs.yml looks correct for the current branch: " + defaultBranch);
+        return;
+    }
+    goalInvocation.progressLog.write("Updating edit_uri in mkdocs.yml to point to branch: " +
+        currentBranch);
+    const newContent = mkdocsYml.replace(editUriPattern, editUriForBranch(currentBranch));
+    await mkdocsYmlFile.setContent(newContent);
+    return;
+}
 
 // TODO: move to @atomist/sdm
 /**
@@ -138,7 +176,10 @@ export const executeHtmlproof: ExecuteGoal = doWithProject(async (inv: ProjectAw
     inv.progressLog.write(htmltestResult.stderr);
 
     return { code: errors.length };
-}, { readOnly: true });
+}, {
+        // on a branch other than the default, it changes mkdocs.yml to update the editUri.
+        readOnly: false,
+    });
 
 async function logHtmltestConfiguration(progressLog: ProgressLog, project: Project): Promise<void> {
     const configFile = await project.getFile(".htmltest.yml");
@@ -157,13 +198,18 @@ async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<voi
         inv.progressLog.write("INFO: cache not enabled. No big deal.");
         return;
     }
-    const configuredCacheDir = cacheConfig.path || "/opt/data";
+    const configuredCacheDir = cacheConfig.path;
     if (!configuredCacheDir) {
         inv.progressLog.write("INFO: no cache directory configured. No big deal.");
         return;
     }
     const htmltestCacheDir = configuredCacheDir + path.sep + "htmltest";
-    await fs.ensureDir(htmltestCacheDir);
+    try {
+        await fs.ensureDir(htmltestCacheDir);
+    } catch (e) {
+        inv.progressLog.write("Unable to create cache directory. Not using it. Error: " + e.message);
+        return;
+    }
 
     const htmltestLooksForCacheIn = inv.project.baseDir + path.sep + "tmp";
     if (await inv.project.hasDirectory("tmp")) {

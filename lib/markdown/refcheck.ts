@@ -23,11 +23,13 @@ import { microgrammar } from "@atomist/microgrammar";
 import { CodeInspectionRegistration } from "@atomist/sdm";
 
 export const linkReferenceMg = microgrammar({
+    // tslint:disable-next-line:no-invalid-template-strings
     phrase: "[...][${refname}]",
     terms: { refname: /[\w-_]+/ },
 });
 
 export const linkDefinitionMg = microgrammar({
+    // tslint:disable-next-line:no-invalid-template-strings
     phrase: "[${refname}]: ${location}",
     terms: {
         refname: /[\w-_]+/,

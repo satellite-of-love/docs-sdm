@@ -34,8 +34,8 @@ import {
 } from "@atomist/sdm";
 import {
     createSoftwareDeliveryMachine,
-    gitHubGoalStatus,
-    goalState,
+    githubGoalStatusSupport,
+    goalStateSupport,
 } from "@atomist/sdm-core";
 import { Build } from "@atomist/sdm-pack-build";
 import { PublishToS3 } from "@atomist/sdm-pack-s3";
@@ -155,8 +155,8 @@ export function machine(
     sdm.addGeneratorCommand(MkdocsSiteGenerator);
 
     sdm.addExtensionPacks(
-        goalState(),
-        gitHubGoalStatus(),
+        goalStateSupport(),
+        githubGoalStatusSupport(),
     );
 
     return sdm;

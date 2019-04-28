@@ -98,7 +98,7 @@ function editUriForBranch(branch: string): string {
 }
 
 async function changeBranchInEditUrl(goalInvocation: GoalInvocation, project: Project): Promise<void> {
-    logger.info("The goal thinks it is on branch: " + goalInvocation.sdmGoal.branch);
+    logger.info("The goal thinks it is on branch: " + goalInvocation.goalEvent.branch);
     logger.info("The project thinks it is on branch: " + project.id.branch);
 
     // we should never be here if this file doesn't exist
@@ -112,7 +112,7 @@ async function changeBranchInEditUrl(goalInvocation: GoalInvocation, project: Pr
     }
     const defaultBranch = editUriMatch[1];
     logger.info("The edit_uri has branch: " + defaultBranch);
-    const currentBranch = goalInvocation.sdmGoal.branch;
+    const currentBranch = goalInvocation.goalEvent.branch;
     if (currentBranch === defaultBranch) {
         goalInvocation.progressLog.write(
             "The edit_uri in mkdocs.yml looks correct for the current branch: " + defaultBranch);
@@ -142,8 +142,8 @@ export function toProjectAwareGoalInvocation(project: GitProject, gi: GoalInvoca
     }
 
     function exec(cmd: string,
-                  args: string | string[] = [],
-                  opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
+        args: string | string[] = [],
+        opts: SpawnSyncOptions = {}): Promise<ExecPromiseResult> {
         const optsToUse: SpawnSyncOptions = {
             cwd: project.baseDir,
             ...opts,
@@ -226,6 +226,7 @@ async function setUpCacheDirectory(inv: ProjectAwareGoalInvocation): Promise<voi
 export const htmltestLogInterpreter: InterpretLog = log => {
 
     const betweenEquals = microgrammar({
+        // tslint:disable-next-line:no-invalid-template-strings
         phrase: "${equals} ${stuff} ${moreEquals}", terms: {
             equals: /=====+/,
             moreEquals: /=====+/,

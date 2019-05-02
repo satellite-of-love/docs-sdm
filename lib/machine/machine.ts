@@ -117,6 +117,7 @@ export function machine(
         filesToPublish: ["site/**/*"],
         pathTranslation: (filepath, inv) => inv.id.sha + "/" + filepath.replace("site/", ""),
         pathToIndex: "site/index.html",
+        linkLabel: "Check it out!",
     }).withProjectListener(MkdocsBuildAfterCheckout);
 
     const mkDocsGoals = goals("mkdocs")
@@ -134,6 +135,7 @@ export function machine(
         filesToPublish: ["site/**/*"],
         pathTranslation: filepath => filepath.replace("site/", ""),
         pathToIndex: "site/index.html",
+        linkLabel: "Live on docs.atomist.com",
     }).withProjectListener(MkdocsBuildAfterCheckout);
 
     const officialPublish = goals("Release site")

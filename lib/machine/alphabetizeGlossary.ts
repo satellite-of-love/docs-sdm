@@ -48,7 +48,7 @@ export async function alphabetizeGlossary(project: Project): Promise<TransformRe
                 };
             });
 
-        const alphabetized = _.sortBy(definitions, d => d.word);
+        const alphabetized = _.sortBy(definitions, d => d.word.toLowerCase());
         const newContent = alphabetized.map(d => d.wordAndDefinition).join("\n\n") + "\n";
 
         const oldContent = await file.getContent();

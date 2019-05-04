@@ -26,7 +26,7 @@ describe("alphabetizeGlossary transform", () => {
         assert(!result.edited);
     });
 
-    it("alphabetizes one that is", async () => {
+    it("alphabetizes one that is there", async () => {
         const projectWithMarkdownFile = InMemoryProject.of({
             path: "docs/developer/glossary.md",
             content: outOfOrderGlossary(),
@@ -38,7 +38,6 @@ describe("alphabetizeGlossary transform", () => {
         const newContent = (await projectWithMarkdownFile.getFile("docs/developer/glossary.md")).getContentSync();
         assert.strictEqual(newContent, orderedGlossary(), newContent);
     });
-
 });
 
 function outOfOrderGlossary(): string {
@@ -50,6 +49,9 @@ Things are great too
 
 #### armadillos
 This starts with A
+
+#### Super thing
+This is after stuff but before thing
 `;
 }
 
@@ -59,6 +61,9 @@ This starts with A
 
 #### stuff
 Stuff is great.
+
+#### Super thing
+This is after stuff but before thing
 
 #### things
 Things are great too

@@ -55,7 +55,6 @@
     "rimraf": "^2.6.2",
     "supervisor": "^0.12.0",
     "ts-node": "^7.0.0",
-    "typedoc": "^0.14.2",
     "typescript": "^3.4.5"
   },
   "directories": {
@@ -63,25 +62,22 @@
   },
   "scripts": {
     "autotest": "supervisor --watch index.ts,lib,test --extensions ts --no-restart-on exit --quiet --exec npm -- test",
-    "build": "run-s compile test lint doc",
-    "clean": "run-p clean:compile clean:test clean:doc clean:run",
+    "build": "run-s compile test lint",
+    "clean": "run-p clean:compile clean:test clean:run",
     "clean:compile": "rimraf git-info.json \"index.{d.ts,js{,.map}}\" \"{lib,test}/**/*.{d.ts,js{,.map}}\" lib/typings/types.ts",
     "clean:dist": "run-s clean clean:npm",
-    "clean:doc": "rimraf doc",
     "clean:npm": "rimraf node_modules",
     "clean:run": "rimraf *-v8.log profile.txt log",
     "clean:test": "rimraf .nyc_output coverage",
     "compile": "run-s git:info gql:gen compile:ts",
     "compile:ts": "tsc --project .",
-    "doc": "typedoc --mode modules --excludeExternals --ignoreCompilerErrors --exclude \"**/*.d.ts\" --out doc index.ts lib",
     "git:info": "atm-git-info",
     "gql:gen": "atm-gql-gen",
     "lint": "tslint --config tslint.json --format verbose --project .",
     "lint:fix": "npm run lint -- --fix",
     "start": "atm-start",
     "test": "mocha --require espower-typescript/guess \"test/**/*.test.ts\"",
-    "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
-    "typedoc": "npm run doc"
+    "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\""
   },
   "engines": {
     "node": ">=8.1.0",
